@@ -2,66 +2,87 @@
 ### Train a classification model with training images ###
 #########################################################
 
-### Author: Weichuan Wu Credit to Yuting Ma
-### Project 3 Group 4
-### ADS Fall 2016
+################### Train starts
+
+list.of.packages <- c("EBImage", "base", "data.table", "caret",'rstudioapi','randomForest','gbm')
+
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+library(EBImage) # not available (for R version 3.3.1)
+library(base)
+library(data.table) # for fread
+library(caret)
+library(rstudioapi)
+library(gbm)
+library(randomForest)
+
 
 #clear environment
 rm(list = ls())
 
-#set directory
-setwd("C:/Study/Columbia/W4243_Applied_Data_Science/Project3/Fall2016-proj3-grp4/data")
+#set directory(Change to your own)
+#setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12")
+#setwd("../spr2017-proj3-group-12/data")
 
 #create label, 0 represent for chicken and 1 for dog
-label<-rep(0,2000)
-label[1:1000]<-1
+#label<-rep(0,2000)
+#label[1:1000]<-1
 
-#The train process
-train <- function(dat_train, label_train, par=NULL){
-  ### Train a Gradient Boosting Model (GBM) using processed features from training images
-  
-  ### Input: 
-  ###  -  processed features from images 
-  ###  -  class labels for training images
-  ### Output: training model specification
-  
-  ### load libraries
-  library("gbm")
-  
-  ### Train with gradient boosting model
-  if(is.null(par)){
-    depth <- 3
-  } else {
-    depth <- par$depth
-  }
-  fit_gbm <- gbm.fit(x=dat_train, y=label_train,
-                     n.trees=2000,
-                     distribution="bernoulli",
-                     interaction.depth=depth, 
-                     bag.fraction = 0.5,
-                     verbose=TRUE)
-  best_iter <- gbm.perf(fit_gbm, method="OOB")
-  return(list(fit=fit_gbm, iter=best_iter))
-}
 
-#The tset process
-test <- function(fit_train, dat_test){
-  
-  ### Fit the classfication model with testing data
-  
-  ### Input: 
-  ###  - the fitted classification model using training data
-  ###  -  processed features from testing images 
-  ### Output: training model specification
-  
-  ### load libraries
-  library("gbm")
-  
-  pred <- predict(fit_train$fit, newdata=dat_test, 
-                  n.trees=fit_train$iter, type="response")
-  
-  return(as.numeric(pred> 0.5))
-}
+#Referencing test and train using gbm from lib folder
+source("../spr2017-proj3-group-12/lib/test.R")
+source("../spr2017-proj3-group-12/lib/train.R")
+source("../spr2017-proj3-group-12/lib/cross_validation.R")
+
+#Overview of train and test function
+
+#train <- function(dat_train, label_train, par=NULL)
+
+#cv.function <- function(X.train, y.train, d, K)
+
+#dat_train is a data frame or data matrix containing the predictor variables and label_train is the vector of outcomes. 
+#The number of rows in dat_train must be the same as the length of label_train
+
+#Read in data set
+sift.feature = read.csv("../spr2017-proj3-group-12/data/sift_features.csv",header = TRUE, stringsAsFactors = FALSE)
+sift.class = read.csv("../spr2017-proj3-group-12/data/labels.csv", header  =TRUE, stringsAsFactors = FALSE)
+
+#Split 25% as the test data
+index = sample(1:ncol(sift.feature),ncol(sift.feature)*0.25,replace = FALSE)
+sift.test = sift.feature[,index]
+sift.train = sift.feature[,-index]
+class.test = sift.class[index,]
+class.train = sift.class[-index,]
+
+#Remove Constant dimensions(Since scale is enabled in the gbm function)
+sift.train = sift.train[which(apply(sift.train,1,sd)!=0),]
+
+
+#Baseline model using GBM with decision stump
+gbm_base = train(dat_train = t(sift.train),
+                 label_train = factor(class.train),
+                 par=data.frame(depth = 1),Ntrees = 100)
+
+################### Train ends
+
+
+######################################Play around the function starts######################
+#test = sift.train[,1:100]
+#class = class.train[1:100]
+
+#fit_gbm <- gbm.fit(x=t(test), y=factor(class),
+                  # n.trees=100,
+                  # distribution="bernoulli",
+                  # interaction.depth=3, 
+                  # bag.fraction = 0.5,
+                  # verbose=FALSE)
+
+#gbm.perf(fit_gbm,method = "test")
+
+
+
+
 
 #the cross validation process for pca processed sift data
 #the error rate is 34.55%
@@ -135,3 +156,5 @@ for(i in 1:k_folds)
   print(paste(as.character(i/k_folds*100),'%',' completed',sep=''))
 }
 result<-c(mean(cv.error),sd(cv.error))
+
+######################################Play around the function ends######################
