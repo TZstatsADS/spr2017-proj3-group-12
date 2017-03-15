@@ -1,9 +1,11 @@
+#load porper packages
 list.of.packages <- c("e107", "ggplot2")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 library(e1071)
 library(ggplot2)
+
 ##################################Cross Validate to find the best parameter for the SVM model with givn trainning data set####################################
 
 #SVM with soft margin
