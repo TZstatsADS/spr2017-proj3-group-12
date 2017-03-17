@@ -1,3 +1,11 @@
+#################
+### SVM model ###
+#################
+### Author: Boxuan Zhao
+### Project 3
+### ADS spring 2017
+
+
 #load porper packages
 list.of.packages <- c("e107", "ggplot2")
 
