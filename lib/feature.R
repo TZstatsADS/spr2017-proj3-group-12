@@ -38,11 +38,11 @@ feature <- function(img_dir, set_name, data_name="data", export=T){
   return(dat)
 }
 
-feature.new = function()
-{
-  y <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/labels.csv", header = T)
-  oriData <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/sift_features.csv", header = T)
-  X <- oriData
-  n_feature <- nrow(X)
-  n_case <- ncol(X)
-}
+#feature.new = function()
+#{
+ # y <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/labels.csv", header = T)
+  #oriData <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/sift_features.csv", header = T)
+  #X <- oriData
+  #n_feature <- nrow(X)
+  #n_case <- ncol(X)
+#}
