@@ -36,7 +36,7 @@ train <- function(dat_train, label_train, par=NULL,Ntrees = 2000){
   return(list(fit=fit_gbm, iter=best_iter))
 }
 
-train.SVM = function(kernel = F, train.data, train.class, cost, gamma)
+train.SVM = function(kernel, train.data, train.class, cost, gamma)
 {
   ### Train a Support Vector Machine (SVM) using processed features from training images
   

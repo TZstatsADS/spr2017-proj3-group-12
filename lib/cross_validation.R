@@ -43,20 +43,12 @@ cv.SVM = function(X.train, y.train, K = 5, kernel = F, cost, gamma = NULL)
     test.data <- X.train[s == i,]
     test.label <- y.train[s == i]
     
-    if(kernel)
-    {
-      model = train.SVM(kernel = kernel, train.data, train.class = train.label, cost = cost, gamma = gamma)
-      
-    }
-    else if(!kernel)
-    {
-      model = train.SVM(kernel = kernel, train.data, train.class = train.label, cost = cost)
-      
-    }
+    model = train.SVM(kernel, train.data, train.class = train.label, cost = cost, gamma = gamma)
     
     pred <- test.SVM(model,val.data = test.data)
+    
     cv.error[i] <- mean(pred != test.label)  
     
   }			
-  return(c(mean(cv.error),sd(cv.error)))
+  return(c(mean(cv.error)))
 }
