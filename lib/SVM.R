@@ -26,44 +26,20 @@ source("./lib/feature.R")
 
 new_feature = feature.new(data.all)
 
-write.csv(new_feature, file="./data/sift.feature.New.csv")
+#write.csv(new_feature, file="./data/sift.feature.New.csv")
 
-#feature.new = function(dat)
-#{
-#  variation = apply(dat,1,sd) 
+#system.time({
   
-  #Thereshold value for known varaince
- # thereshold = summary(variation)[2]
-  
-#  dat = dat[which(variation > thereshold),]
-  
- # data.dog = dat[,1001:2000]
-  #data.chicken = dat[,1:1000]
-  
-  #avg.dog = apply(data.dog,1,mean)
-  #avg.chicken = apply(data.chicken,1,mean)
-  
-  #avg.difference = abs(avg.dog - avg.chicken)
-  
-  #large = which(avg.difference > summary(avg.difference)[3])
-  
-  #dat = dat[large,]
-  
-  #return(dat)
-#}
+#test = feature.new(data.all)
 
-system.time({
-  
-test = feature.new(data.all)
-
-})
+#})
 ###############################################################################################################################
 
 #################
 #Data Processing#
 #################
 
-data.all = data.feature
+data.all = new_feature
 
 n_case = dim(data.all)[2]
 
