@@ -46,3 +46,26 @@ feature <- function(img_dir, set_name, data_name="data", export=T){
   #n_feature <- nrow(X)
   #n_case <- ncol(X)
 #}
+feature.new = function(dat)
+{
+  variation = apply(dat,1,sd) 
+  
+  #Thereshold value for known varaince
+  thereshold = summary(variation)[2]
+  
+  dat = dat[which(variation > thereshold),]
+  
+  data.dog = dat[,1001:2000]
+  data.chicken = dat[,1:1000]
+  
+  avg.dog = apply(data.dog,1,mean)
+  avg.chicken = apply(data.chicken,1,mean)
+  
+  avg.difference = abs(avg.dog - avg.chicken)
+  
+  large = which(avg.difference > summary(avg.difference)[3])
+  
+  dat = dat[large,]
+  
+  return(dat)
+}
