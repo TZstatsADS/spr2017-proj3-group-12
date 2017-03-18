@@ -30,25 +30,25 @@ cv.function <- function(X.train, y.train, d, K){
   
 }
 
-cv.SVM = function(X.train, y.train, K = 5, kernel = F, cost, gamma = NULL)
-{
-  n <- length(y.train)
-  n.fold <- floor(n/K)
-  s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
-  cv.error <- rep(NA, K)
+#cv.SVM = function(X.train, y.train, K = 5, kernel = F, cost, gamma = NULL)
+#{
+ # n <- length(y.train)
+  #n.fold <- floor(n/K)
+#  s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)))  
+ # cv.error <- rep(NA, K)
   
-  for (i in 1:K){
-    train.data <- X.train[s != i,]
-    train.label <- y.train[s != i]
-    test.data <- X.train[s == i,]
-    test.label <- y.train[s == i]
+  #for (i in 1:K){
+   # train.data <- X.train[s != i,]
+    #train.label <- y.train[s != i]
+    #test.data <- X.train[s == i,]
+    #test.label <- y.train[s == i]
     
-    model = train.SVM(kernel, train.data, train.class = train.label, cost = cost, gamma = gamma)
+    #model = train.SVM(kernel, train.data, train.class = train.label, cost = cost, gamma = gamma)
     
-    pred <- test.SVM(model,val.data = test.data)
+    #pred <- test.SVM(model,val.data = test.data)
     
-    cv.error[i] <- mean(pred != test.label)  
+    #cv.error[i] <- mean(pred != test.label)  
     
-  }			
-  return(c(mean(cv.error)))
-}
+  #}			
+  #return(c(mean(cv.error)))
+#}
