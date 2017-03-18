@@ -35,3 +35,27 @@ train <- function(dat_train, label_train, par=NULL,Ntrees = 2000){
 
   return(list(fit=fit_gbm, iter=best_iter))
 }
+
+train.SVM = function(kernel = F, train.data, train.class, cost, gamma)
+{
+  ### Train a Support Vector Machine (SVM) using processed features from training images
+  
+  ### Input: 
+  ###  -  kernel : indicate whdther in include RBF kernel 
+  ###  -  train.data : each row as an observation of the data
+  ###  -  train.class : a vector contains classes for each row of train.data
+  ###  -  cost : specify the cost of the margin
+  ###  -  gamma : specify the bandwidth
+  ### Output: training model specification
+  if(kernel)
+  {
+    model = svm(x=train.data,y=as.factor(train.class),kernel = "radial",cost=cost,gamma=gamma,type = "C")
+    
+  }
+  else if(!kernel)
+  {
+    model = svm(x=train.Data,y=as.factor(train.class),cost = cost,kernel = "linear")
+    
+  }
+  return(model)
+}

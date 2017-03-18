@@ -127,6 +127,10 @@ AdaBoost.Cross <- function(B){
   train_error <- matrix(NA, nrow = B, ncol = k1) 
   test_error <- matrix(NA, nrow = B, ncol = k1) 
   n_case_train = n_case * (1- 1/ k1)
+  #Reshuffle the data
+  Resample = sample(1:n_case,n_case,replace = FALSE)
+  X = X[,Resample]
+  y = y[Resample]
   for (j in 1:k1){
     # CV
     X.train <- X[,folds != j]
@@ -145,10 +149,10 @@ AdaBoost.Cross <- function(B){
       #Thinking of a way to solve this...... When train error reahces zero, the alpha assigned to the classifier will be Inf, causing a bug
       
       #Orginal Line
-      #err_current <- sum(weights * (y.train != classify(X.train, pars_m[b,])))/sum(weights)
+      err_current <- sum(weights * (y.train != classify(X.train, pars_m[b,])))/sum(weights)
       
       #A line that will prevent this problem
-      err_current = 0.3 
+      #err_current = 0.3 
       ###################################################################################################################################
       
       alpha[b] <- log((1-err_current)/err_current)
