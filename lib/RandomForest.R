@@ -17,7 +17,7 @@ RandomForestExploration = function()
   dev.off()
 }
 
-trainRandomForest = function(feature_filename, labels_filename)
+trainRandomForest = function(feature_filename, labels_filename, full_feature = FALSE)
 {
   t = proc.time()
   image_features = t(read.csv(feature_filename))
@@ -27,14 +27,27 @@ trainRandomForest = function(feature_filename, labels_filename)
   cat("Elapsed time for Training Random Forest with 500 trees is ", train_time, " seconds \n")
   err_rate = image_rf$err.rate[500, "OOB"]
   cat("Validation Error rate for Random Forest with 500 trees is", err_rate, "\n") #.2895 for full feature set
+  filename = "../output/RFModifiedFeature.RData"
+  if(full_feature == TRUE)
+  {
+    filename = "../output/RFFullFeature.RData"
+  }
+  save(image_rf, file = filename)
   return(image_rf)
 }
-testRandomForest = function(rf_object, features_filename)
+
+testRandomForest = function(rf_object, features_filename, full_feature = FALSE)
 {
   t = proc.time()
   image_features = t(read.csv(features_filename))
   rf_predict = as.vector(predict(rf_object, image_features))
   test_time = (proc.time() - t)[3]
   cat("Elapsed prediction time for  Random Forest with 500 trees is ", test_time, " seconds \n")
+  filename = "../output/RFModifiedPredictions.csv"
+  if(full_feature == TRUE)
+  {
+    filename = "../output/RFFullFeaturePredictions.csv"
+  }
+  write.csv(rf_predict, file = filename)
   return(rf_predict)
 }
