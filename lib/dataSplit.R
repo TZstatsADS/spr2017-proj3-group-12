@@ -6,7 +6,7 @@ dataSplit = function(percentage = 0.25)
   source("./lib/feature.R")
   #image_features_new = read.csv("../data/sift.feature.New.csv")
   image_features_new = feature.new(image_features)
-  image_labels = (read.csv("./data/labels.csv"))
+  image_labels = read.csv("./data/labels.csv")
   n = ncol(image_features)
   test_rows = sample(c(1:n), percentage*n, replace = FALSE)
   #train_rows = -test_rows
