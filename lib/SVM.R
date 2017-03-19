@@ -11,6 +11,7 @@ list.of.packages <- c("e1071", "ggplot2")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
+
 library(e1071)
 library(ggplot2)
 
@@ -82,7 +83,7 @@ class.test = class.all[test.index]
 ######################
 system.time({
 
-  SVM.Margin.par = svm.margin.cv(dat.train = data.other, class.train = class.other, cost = c(0.01))
+  SVM.Margin.par = svm.margin.cv(dat.train = data.other, class.train = class.other, cost = c(0.01,0.02))
 
   })
 
