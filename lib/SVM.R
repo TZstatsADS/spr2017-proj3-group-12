@@ -48,34 +48,34 @@ source("./lib/cross_validation.R")
 #################
 
 
-n_case = dim(data.all)[2]
+#n_case = dim(data.all)[2]
 
-n_feature = dim(data.all)[1]
+#n_feature = dim(data.all)[1]
 
 #Split 25% of the data as testing data
 
 #Reshuffle the data
-index = sample(1:n_case, n_case, replace = F)
-data.all = data.all[,index]
-class.all = class.all[index,]
+#index = sample(1:n_case, n_case, replace = F)
+#data.all = data.all[,index]
+#class.all = class.all[index,]
 
 #Transform class 0 (chicken) to -1
-class.all = ifelse(class.all == 0, -1, 1)
+#class.all = ifelse(class.all == 0, -1, 1)
 
 #Split the data
-test.index = sample(1:n_case, n_case*0.25, replace = F)
+#test.index = sample(1:n_case, n_case*0.25, replace = F)
 
-data.other = data.all[,-test.index]
+#data.other = data.all[,-test.index]
 
-data.other = t(data.other)
+#data.other = t(data.other)
 
-class.other = class.all[-test.index]
+#class.other = class.all[-test.index]
 
-data.test = data.all[,test.index]
+#data.test = data.all[,test.index]
 
-data.test = t(data.test)
+#data.test = t(data.test)
 
-class.test = class.all[test.index]
+#class.test = class.all[test.index]
 
 
 ######################
