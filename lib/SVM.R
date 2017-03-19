@@ -26,20 +26,21 @@ source("./lib/feature.R")
 
 new_feature = feature.new(data.all)
 
+data.all = new_feature
+
+
 #write.csv(new_feature, file="./data/sift.feature.New.csv")
 
-#system.time({
-  
-#test = feature.new(data.all)
+####################
+#Do not Use feature#
+####################
 
-#})
-###############################################################################################################################
+data.all = data.all[which(apply(data.all,1,sd)>summary(apply(data.all,1,sd))[2]),]
 
 #################
 #Data Processing#
 #################
 
-data.all = new_feature
 
 n_case = dim(data.all)[2]
 
@@ -72,6 +73,8 @@ class.test = class.all[test.index]
 
 
 
+
+
 ######################
 #SVM with soft margin#
 ######################
@@ -92,7 +95,7 @@ cost = c(0.01)
 #Perform 5 fold cross validation
 #for(j in 1 :length(cost))
 #{
-j = 1
+  j=1
   for(i in 1:5){
     val.Indexes <- which(folds==i,arr.ind=TRUE)
     val.Data <- data.other[val.Indexes, ]
@@ -106,22 +109,22 @@ j = 1
     #validation error for current iteration with current cost
     val.err.cost.interm[i] = mean(pred != val.class)  
     
-  }
+ # }
   #Obtain the validation error for the current cost
   val.err.cost.f[j] = mean(val.err.cost.interm)
-#}
+}
 
 })
 
 #A function of margin parameter in the linear case
-data.plot = data.frame(cost = cost, error = val.err.cost.f)
+svm.data.margin = data.frame(cost = cost, cv.error = val.err.cost.f, test.error = NA)
 
 #ggplot(data = data.plot) + geom_point(mapping = aes(x=data.plot$cost,y=data.plot$error))+
  # labs(x="Margin",y="Misclassification rate",title = "Cross-validation estimates in Linear Case")+
   #geom_line(mapping = aes(x=data.plot$cost,y=data.plot$error))
 
 #Hence the parameter is:
-margin.cost = cost[which.min(data.plot$error)]
+margin.cost = cost[which.min(svm.data.margin$cv.error)]
 
 #For svm with only margin
 
@@ -138,7 +141,7 @@ system.time({
   pred.margin <- predict(svm.m.after,data.test)
 
   #Misclassification rate for SVM with only margin
-  mean(pred.margin != class.test)
+  svm.data.margin$test.error =  mean(pred.margin != class.test)
 
 })
 
@@ -147,21 +150,21 @@ system.time({
 #################################
 #SVM with soft margin and kernel#
 #################################
-#Again, we perform 10 - fold cross validation
+#Again, we perform 5 - fold cross validation
 cost = c(1)
-gamma = c(0.0005,0.001,0.0015) #0.4966667
-#gamma = c(0.02,0.03,0.04) #0.4966667
-#gamma = c(0.1,0.2,0.3) #0.4966667
+gamma = c(0.0005)
+#gamma = c(0.001,0.0005,0.0015) #0.4966667
 val.par.frame = data.frame(cost = as.vector(mapply(rep,cost,length(gamma))), gamma = rep(gamma,length(cost)), error = NA)
 
 val.err.m.k.i = c()
 
-
+system.time({
+  
   for(i in 1:nrow(val.par.frame))
   {
-    #for(j in 1:5)
-    #{
-      j = 1
+    for(j in 1:5)
+    {
+      #j = 1
       val.Index = which(folds == j, arr.ind = TRUE)
       val.data.m.k = data.other[val.Index,]
       train.data.m.k = data.other[-val.Index,]
@@ -174,12 +177,14 @@ val.err.m.k.i = c()
       #Validaiton error at this iteration with current gamma and cost
       val.err.m.k.i[i] = mean(pred != val.class.m.k)
       
-    #}
+    }
     val.par.frame$error[i] = mean(val.err.m.k.i)
   }
+  
+})
 
 #Generate data plot
-data.plot=data.frame(cost = val.par.frame$cost, error = val.par.frame$error, gamma = as.factor(val.par.frame$gamma))
+svm.data.kernel=data.frame(cost = val.par.frame$cost, gamma = as.factor(val.par.frame$gamma), cv.error = val.par.frame$error, test.error =NA)
 
 #A function of margin parameter in the non-linear case
 #ggplot(data = val.par.frame)+
@@ -197,18 +202,19 @@ kernel.gamma = as.numeric(as.character(val.par.frame$gamma[which.min(val.par.fra
 
 #For svm with margin and RBF kernel
 system.time({
-  
 svm.m.k.after = svm(x = data.other,y = as.factor(class.other), cost = kernel.cost, gamma = kernel.gamma, type = "C")
+})
 
-)}
 
 #For svm with margin and RBF kernel
-system.time({
+system.time({ 
   
 pred.margin.kernel <- predict(svm.m.k.after,data.test)
 
 
-#Misclassification rate for SVM with margin and RBF kernel
-mean(pred.margin.kernel != class.test)
 
-)}
+#system.time({
+#Misclassification rate for SVM with margin and RBF kernel
+svm.data.kernel$test.error = mean(pred.margin.kernel != class.test)
+})
+#)}
