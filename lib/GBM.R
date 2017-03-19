@@ -39,7 +39,6 @@ TrainGBM = function(feature_filename,labels_filename, param_trees = 500, full_fe
   {
     filename = "../output/GBMFullFeature.RData"
   }
-  gbm_model = tune_gbm$finalModel
   save(tune_gbm, file = filename)
   return(tune_gbm)
   
@@ -50,6 +49,8 @@ TestGBM = function(gbm_model, feature_filename, param_trees = 500, full_feature 
   t = proc.time()
   image_features = t(read.csv(feature_filename))
   gbm_predict = predict(tune_gbm, image_features, n.trees = param_trees)
+  test_time = (proc.time() - t)[3]
+  cat("Elapsed prediction time for  GBM with ", param_trees, " trees is ", test_time, " seconds \n")
   filename = "../output/GBMModifiedPredictions.csv"
   if(full_feature == TRUE)
   {
