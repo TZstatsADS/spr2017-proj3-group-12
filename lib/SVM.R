@@ -14,28 +14,38 @@ if(length(new.packages)) install.packages(new.packages)
 
 library(e1071)
 library(ggplot2)
-
-data.all= read.csv("./data/sift_features.csv",header = T)
-
-class.all = read.csv("./data/labels.csv",header = T)
-
-##################################
-#New Feature(dimension reduction)#
-##################################
-
-source("./lib/feature.R")
-
-new_feature = feature.new(data.all)
-
-data.all = new_feature
-
 source("./lib/train.R")
 source("./lib/test.R")
 source("./lib/cross_validation.R")
 
+dat.ori.train = read.csv("./data/sift_features_train.csv",header = T)
+
+dat.ori.train = t(dat.ori.train)
 
 
-#write.csv(new_feature, file="./data/sift.feature.New.csv")
+dat.ori.test = read.csv("./data/sift_features_test.csv",header = T)
+
+dat.ori.test = t(dat.ori.test)
+
+
+dat.simp.train = read.csv("./data/sift_features_new_train.csv",header = T)
+
+dat.simp.train = t(dat.simp.train)
+
+
+dat.simp.test = read.csv("./data/sift_features_new_test.csv",header = T)
+
+dat.simp.test = t(dat.simp.test)
+
+
+class.train = read.csv("./data/labels_train.csv",header = T)
+
+class.train = class.train[,1]
+
+
+class.test = read.csv("./data/labels_test.csv",header = T)
+
+class.test = class.test[,1]
 
 ####################
 #Do not Use feature#
@@ -81,41 +91,97 @@ source("./lib/cross_validation.R")
 ######################
 #SVM with soft margin#
 ######################
-system.time({
+margin.cv.simp = system.time({
 
-  SVM.Margin.par = svm.margin.cv(dat.train = data.other, class.train = class.other, cost = c(0.01,0.02))
+  SVM.Margin.par = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = c(0.01))
 
   })
 
-system.time({
+margin.train.simp = system.time({
   
-SVM.final.margin.mdodel = Train.SVM.margin(X = data.other,Y = class.other,cost = SVM.Margin.par$cost)
+SVM.final.margin.model = Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = SVM.Margin.par$cost)
 
 })
 
-system.time({
+margin.pred.simp = system.time({
   
-SVM.margin.test.error = Test.SVM(SVM.final.margin.mdodel,val = data.test,class = class.test)
+SVM.margin.test.error = Test.SVM(SVM.final.margin.model,val = dat.simp.test,class = class.test)
 
 })
+
+SVM.Margin.par
+
+SVM.margin.test.error
+
+#############################################################################################
+margin.cv.ori = system.time({
+  
+  SVM.Margin.par = svm.margin.cv(dat.train = dat.ori.train, class.train = class.train, cost = c(0.01))
+  
+})
+
+margin.train.ori = system.time({
+  
+  SVM.final.margin.mdoel = Train.SVM.margin(X = dat.ori.train,Y = class.train,cost = SVM.Margin.par$cost)
+  
+})
+
+margin.pred.ori = system.time({
+  
+  SVM.margin.test.error = Test.SVM(SVM.final.margin.mdoel,val = dat.ori.test,class = class.test)
+  
+})
+
+SVM.Margin.par
+
+SVM.margin.test.error
 
 #################################
 #SVM with soft margin and kernel#
 #################################
-system.time({
+
+kernel.cv.simp = system.time({
   
-SVM.kernel.par = svm.margin.cv(dat.train = data.other, class.train = class.other, cost = 1, gamma = 0.0005)
+SVM.kernel.par = svm.kernel.cv(dat.train = dat.simp.train, class.train = class.train, cost = 1, gamma = 0.0005)
 
 })
 
-system.time({
+kernel.train.simp = system.time({
   
-SVM.kernel.final.model = Train.SVM.kernel(X = data.other,Y = class.other,cost = SVM.kernel.par$cost,gamma = SVM.kernel.par$gamma)
+SVM.kernel.final.model = Train.SVM.kernel(X = dat.simp.train,Y = class.train,cost = SVM.kernel.par$cost,gamma = SVM.kernel.par$gamma)
 
 })
 
-system.time({
+kernel.pred.simp = system.time({
   
-SVM.margin.test.error = Test.SVM(SVM.kernel.final.model,val = data.test,class = class.test)
+SVM.kernel.test.error = Test.SVM(SVM.kernel.final.model,val = dat.simp.test,class = class.test)
 
 })
+
+SVM.kernel.par
+
+SVM.kernel.test.error
+
+####################################################################################################################################
+
+kernel.cv.ori = system.time({
+  
+  SVM.kernel.par = svm.kernel.cv(dat.train = dat.ori.train, class.train = class.train, cost = 1, gamma = 0.0005)
+  
+})
+
+kernel.train.ori = system.time({
+  
+  SVM.kernel.final.model = Train.SVM.kernel(X = dat.ori.train,Y = class.train,cost = SVM.kernel.par$cost,gamma = SVM.kernel.par$gamma)
+  
+})
+
+kernel.pred.ori = system.time({
+  
+  SVM.kernel.test.error = Test.SVM(SVM.kernel.final.model,val = dat.ori.test,class = class.test)
+  
+})
+
+SVM.kernel.par
+
+SVM.kernel.test.error
