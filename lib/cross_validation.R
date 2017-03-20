@@ -57,7 +57,7 @@ svm.margin.cv = function(dat.train, class.train, cost)
       train.class = class.train[-val.Indexes]
       val.class = class.train[val.Indexes]
       #Train the model
-      model = svm(x = train.Data, y = as.factor(train.class), cost = cost, kernel = "linear")
+      model = svm(x = train.Data, y = as.factor(train.class), cost = cost[j], kernel = "linear")
       #Prediction on the validation data
       pred <- predict(model,val.Data)
       #validation error for current iteration with current cost
@@ -89,7 +89,7 @@ svm.kernel.cv = function(dat.train, class.train, cost, gamma)
   
   folds = cut(seq(1,nrow(dat.train)),breaks=5,labels=FALSE)
   val.par.frame = data.frame(cost = as.vector(mapply(rep,cost,length(gamma))), gamma = rep(gamma,length(cost)), error = NA)
-  val.err.m.k.i = c()
+  val.err.i = c()
   for(i in 1:nrow(val.par.frame))
   {
     #i = 1
@@ -97,20 +97,20 @@ svm.kernel.cv = function(dat.train, class.train, cost, gamma)
     {
 
       val.Index = which(folds == j, arr.ind = TRUE)
-      val.data.m.k = data.other[val.Index,]
-      train.data.m.k = data.other[-val.Index,]
-      val.class.m.k = class.other[val.Index]
-      train.class.m.k =  class.other[-val.Index]
+      val.data = dat.train[val.Index,]
+      train.data = dat.train[-val.Index,]
+      val.class = class.train[val.Index]
+      train.class =  class.train[-val.Index]
       #Train SVM model with current cost and current gamma at the ith iteration
       #model = Train.SVM.kernel(X=train.data.m.k,Y=train.class.m.k,cost=val.par.frame$cost[i],gamma = val.par.frame$gamma[i])
-      model = svm(x=train.data.m.k,y=as.factor(train.class.m.k),cost = val.par.frame$cost[i],gamma = val.par.frame$gamma[i],type = "C",kernel = "radial")
+      model = svm(x=train.data,y=as.factor(train.class),cost = val.par.frame$cost[i],gamma = val.par.frame$gamma[i],type = "C",kernel = "radial")
       #Prediction on validation data with current cost and current gamma at current iteration
-      pred = predict(model,val.data.m.k)
+      pred = predict(model,val.data)
       #Validaiton error at this iteration with current gamma and cost
-      val.err.m.k.i[i] = mean(pred != val.class.m.k)
+      val.err.i[i] = mean(pred != val.class)
       
     }
-    val.par.frame$error[i] = mean(val.err.m.k.i)
+    val.par.frame$error[i] = mean(val.err.i)
   }
   
   #For cost
