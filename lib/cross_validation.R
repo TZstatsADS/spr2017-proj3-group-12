@@ -57,7 +57,7 @@ svm.margin.cv = function(dat.train, class.train, cost)
       train.class = class.train[-val.Indexes]
       val.class = class.train[val.Indexes]
       #Train the model
-      model = svm(x = dat.train ,y = as.factor(class.train),cost = cost,kernel = "linear")
+      model = svm(x = train.Data, y = as.factor(train.class), cost = cost, kernel = "linear")
       #Prediction on the validation data
       pred <- predict(model,val.Data)
       #validation error for current iteration with current cost
@@ -70,7 +70,7 @@ svm.margin.cv = function(dat.train, class.train, cost)
   svm.data.margin = data.frame(cost = cost, cv.error = val.err.cost.f)
   
   #For cost
-  margin.cost = cost[which.min(svm.data.margin$cv.error)]
+  margin.cost = svm.data.margin$cost[which.min(svm.data.margin$cv.error)]
   
   return(list(cost = margin.cost, cv.error = min(svm.data.margin$cv.error), frame = svm.data.margin))
 }
