@@ -93,7 +93,7 @@ class.test = class.test[,1]
 ######################
 margin.cv.simp = system.time({
 
-  SVM.Margin.par = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = c(1,2,0.01,0.5))
+  SVM.Margin.par = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = c(1,2,0.01,0.5,0.05,0.00005,0.3))
 
   })
 
