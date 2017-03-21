@@ -16,4 +16,6 @@ dataSplit = function(percentage = 0.25)
   write.csv(image_labels[test_rows,], file = "./data/labels_test.csv", row.names = FALSE)
   write.csv(image_features_new[,-test_rows], file = "./data/sift_features_new_train.csv", row.names = FALSE)
   write.csv(image_features_new[,test_rows], file = "./data/sift_features_new_test.csv", row.names = FALSE)
+  #write.csv()
+  #write.csv()
 }
