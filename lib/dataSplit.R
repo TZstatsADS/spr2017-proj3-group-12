@@ -4,36 +4,55 @@ dataSplit = function(percentage = 0.25)
 {
   source("./lib/feature.R")
   
-  image_features = read.csv("./data/sift_features.csv")
+  sift.ori = read.csv("./data/sift_features.csv")
   
   #image_features_new = read.csv("../data/sift.feature.New.csv")
-  image_features_new = feature.new(image_features)
+  sift.simp = feature.new(sift.ori)
   
-  image_features_gray = read.csv("./data/gray.csv")
+  gray = read.csv("./data/gray.csv")
   
   #Remove the first column of observation numbers
-  image_features_gray = image_features_gray[,2:2001]
+  gray = gray[,2:2001]
   
   #Remove fetures that have no variation (if any)
-  image_features_gray = image_features_gray[which(apply(image_features_gray,1,sd)!=0),]
+  gray = gray[which(apply(gray,1,sd)!=0),]
   
   #Rename the columns
-  colnames(image_features_gray) = colnames(image_features_new)
+  colnames(gray) = colnames(sift.simp)
   
-  image_features_new_gray = rbind(image_features_new,image_features_gray)
+  #Construct New feature set
   
-  image_labels = read.csv("./data/labels.csv")
+  #Simplified Sift Features with gray features
+  sift.simp.gray = rbind(sift.simp,gray)
   
-  n = ncol(image_features)
+  #Original Sift features with gray features
+  sift.ori.gray = rbind(sift.ori,gray)
+    
+  labels = read.csv("./data/labels.csv")
+  
+  n = ncol(sift.ori)
   
   test_rows = sample(c(1:n), percentage*n, replace = FALSE)
   #train_rows = -test_rows
-  write.csv(image_features[,-test_rows], file = "./data/sift_features_train.csv", row.names = FALSE)
-  write.csv(image_features[,test_rows], file = "./data/sift_features_test.csv", row.names = FALSE)
-  write.csv(image_labels[-test_rows,], file = "./data/labels_train.csv", row.names = FALSE)
-  write.csv(image_labels[test_rows,], file = "./data/labels_test.csv", row.names = FALSE)
-  write.csv(image_features_new[,-test_rows], file = "./data/sift_features_new_train.csv", row.names = FALSE)
-  write.csv(image_features_new[,test_rows], file = "./data/sift_features_new_test.csv", row.names = FALSE)
-  write.csv(image_features_new_gray[,-test_rows], file = "./data/sift_new_gray_train.csv", row.names = FALSE)
-  write.csv(image_features_new_gray[,test_rows], file = "./data/sift_new_gray_test.csv", row.names = FALSE)
+  
+  #Output original sift features into test and train set
+  write.csv(sift.ori[,-test_rows], file = "./data/sift_ori_train.csv", row.names = FALSE)
+  write.csv(sift.ori[,test_rows], file = "./data/sift_ori_test.csv", row.names = FALSE)
+  
+  #Output Simplified sift features into test and train set
+  write.csv(sift.simp[,-test_rows], file = "./data/sift_simp_train.csv", row.names = FALSE)
+  write.csv(sift.simp[,test_rows], file = "./data/sift_simp_test.csv", row.names = FALSE)
+  
+  #Output simplified sift features with gray features into test and train set
+  write.csv(sift.simp.gray[,-test_rows], file = "./data/sift_simp_gray_train.csv", row.names = FALSE)
+  write.csv(sift.simp.gray[,test_rows], file = "./data/sift_simp_gray_test.csv", row.names = FALSE)
+  
+  #Output original sift features with gray features into test and train set
+  write.csv(sift.ori.gray[,-test_rows], file = "./data/sift_ori_gray_train.csv", row.names = FALSE)
+  write.csv(sift.ori.gray[,test_rows], file = "./data/sift_ori_gray_test.csv", row.names = FALSE)
+  
+  #output class labels in to test and train set
+  write.csv(labels[-test_rows,], file = "./data/labels_train.csv", row.names = FALSE)
+  write.csv(labels[test_rows,], file = "./data/labels_test.csv", row.names = FALSE)
+  
 }
