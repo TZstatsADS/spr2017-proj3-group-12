@@ -1,4 +1,10 @@
-#setwd("C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
+###########################################
+### Construting Train and test features ###
+###########################################
+### Author: Vikas Arun
+### Modifier: Boxuan Zhao
+### Project 3
+### ADS spring 2017
 
 dataSplit = function(percentage = 0.25)
 {
