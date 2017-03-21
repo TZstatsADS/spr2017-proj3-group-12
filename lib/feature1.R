@@ -52,7 +52,7 @@ feature <- function(img_dir, data_dir) {
 #  }
 #  file_paths2 <- sort(file_paths2)
   
-  gray_feature <- matrix(NA, nrow = 64*64, ncol = n_files)
+  gray_feature <- matrix(NA, nrow = 256, ncol = n_files)
 #  location_feature <- matrix(NA, nrow = 64*64, ncol = n_files)
   
   # Construct harmonic coefficient features from image outline
@@ -63,14 +63,14 @@ feature <- function(img_dir, data_dir) {
     tryCatch({
       img_gray <- readImage(file_paths[i])
 #      img_bw <- readImage(file_paths2[i])
-      img_gray <- resize(img_gray, 64, 64)
+#      img_gray <- resize(img_gray, 64, 64)
 #      img_bw <- resize(img_bw, 64, 64)
-      mat <- imageData(img)
-##      n <- 64
-##      nBin <- seq(0, 1, length.out = n)
-##      freq_gray <- as.data.frame(table(factor(findInterval(mat, nBin), levels = 1:n)))
-##      gray_feature[,i] <- as.numeric(freq_gray$Freq)/(ncol(mat)*nrow(mat))
-      gray_feature[,i] <- as.vector(mat)
+      mat <- imageData(img_gray)
+      n <- 256
+      nBin <- seq(0, 1, length.out = n)
+      freq_gray <- as.data.frame(table(factor(findInterval(mat, nBin), levels = 1:n)))
+      gray_feature[,i] <- as.numeric(freq_gray$Freq)/(ncol(mat)*nrow(mat))
+#      gray_feature[,i] <- as.vector(mat)
       
 #      img_bw <- thresh(img_01, w=50, h=50, offset=0.05)
 
@@ -87,8 +87,12 @@ feature <- function(img_dir, data_dir) {
     }, 
     error = function(c) "invalid or corrupt JPEG file")
   }
-  write.csv(gray_feature, file = "raw_gray.csv")
+  return(gray_feature)
 #  write.csv(location_feature, file = "location.csv")
 }
 
+gray_feature <- feature(img_dir, data_dir)
+write.csv(gray_feature, file = "gray.csv")
 
+
+system.time(feature(img_dir, data_dir))
