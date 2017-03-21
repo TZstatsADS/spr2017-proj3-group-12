@@ -1,3 +1,9 @@
+def load_data():
+    x_test = np.genfromtxt('/Users/ptfairy/Desktop/training_data/X_test.csv', delimiter=',')
+    y_test = np.genfromtxt('/Users/ptfairy/Desktop/training_data/y_test.csv', delimiter=',')
+    x_train = np.genfromtxt('/Users/ptfairy/Desktop/training_data/X_train.csv', delimiter=',')
+    y_train = np.genfromtxt('/Users/ptfairy/Desktop/training_data/y_train.csv', delimiter=',')
+
 def kNN_classification(x_train, y_train, x_test, y_test):
     # calculate the distance for each testing nodes:
     total_acurracy = []
@@ -29,3 +35,9 @@ def kNN_classification(x_train, y_train, x_test, y_test):
     plt.grid(True)
     plt.savefig("question 3.png")
     plt.show()
+
+    f __name__ == '__main__':
+    # load data
+    x_test, x_train, y_test, y_train = load_data()
+    
+    kNN_classification(x_train, y_train, x_test, y_test)
