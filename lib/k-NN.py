@@ -33,7 +33,6 @@ def kNN_classification(x_train, y_train, x_test, y_test):
     plt.title("$k-NN$ Classification")
     plt.plot(x_axis, total_acurracy, 'b+-')
     plt.grid(True)
-    plt.savefig("question 3.png")
     plt.show()
 
     f __name__ == '__main__':
