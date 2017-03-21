@@ -18,22 +18,22 @@ source("./lib/train.R")
 source("./lib/test.R")
 source("./lib/cross_validation.R")
 
-dat.ori.train = read.csv("./data/sift_features_train.csv",header = T)
+dat.ori.train = read.csv("./data/sift_ori_train.csv",header = T)
 
 dat.ori.train = t(dat.ori.train)
 
 
-dat.ori.test = read.csv("./data/sift_features_test.csv",header = T)
+dat.ori.test = read.csv("./data/sift_ori_test.csv",header = T)
 
 dat.ori.test = t(dat.ori.test)
 
 
-dat.simp.train = read.csv("./data/sift_features_new_train.csv",header = T)
+dat.simp.train = read.csv("./data/sift_simp_train.csv",header = T)
 
 dat.simp.train = t(dat.simp.train)
 
 
-dat.simp.test = read.csv("./data/sift_features_new_test.csv",header = T)
+dat.simp.test = read.csv("./data/sift_simp_test.csv",header = T)
 
 dat.simp.test = t(dat.simp.test)
 
@@ -47,6 +47,26 @@ class.test = read.csv("./data/labels_test.csv",header = T)
 
 class.test = class.test[,1]
 
+
+dat.simp.gray.train = read.csv("./data/sift_simp_gray_train.csv",header = T)
+
+dat.simp.gray.train = t(dat.simp.gray.train)
+
+
+dat.simp.gray.test = read.csv("./data/sift_simp_gray_test.csv",header = T)
+
+dat.simp.gray.test = t(dat.simp.gray.test)
+
+
+dat.ori.gray.train = read.csv("./data/sift_ori_gray_train.csv",header = T)
+
+dat.ori.gray.train = t(dat.ori.gray.train)
+
+
+dat.ori.gray.test = read.csv("./data/sift_ori_gray_test.csv",header = T)
+
+dat.ori.gray.test = t(dat.ori.gray.test)
+
 ####################
 #Do not Use feature#
 ####################
@@ -57,59 +77,118 @@ class.test = class.test[,1]
 #SVM with soft margin on Simplified Feature#
 ############################################
 
-###################
-#cost = 0.01
 
-#cv.error = 0.2993333
+#> cv.simp1
+#用户    系统    流逝 
+#1117.16   10.28 1260.41 
+#> train.simp1
+#用户  系统  流逝 
+#63.11  0.34 67.17 
+#> pred.simp1
+#用户 系统 流逝 
+#6.63 0.13 7.56 
 
-#   cost  cv.error
-#1 1e-04 0.7993333
-#2 1e-03 0.3040000
-#3 1e-02 0.2993333
-#4 1e-01 0.2993333
 
-#Test Error
-#  0.228
-#################
 
+
+#> SVM.Margin.par.simp
 #$cost
-#[1] 0.003162278    aka 10^-2.5
+#[1] 0.001
 
 #$cv.error
-#[1] 0.2973333
+#[1] 0.288
 
 #$frame
 #cost  cv.error
-#1 0.031622777 0.2993333
-#2 0.003162278 0.2973333
+#1 0.000100000 0.7866667
+#2 0.001000000 0.2880000
+#3 0.003162278 0.3000000
+#4 0.010000000 0.3080000
+#5 0.100000000 0.3080000
 
-#Test error
-#0.222
+#> SVM.margin.test.error.simp
+#[1] 0.2
+ 
 
-#################
-#FINAL VALUE: 10^-2.5 Test err = 0.222  val.err 0.297333
+cv.simp1 = system.time({
 
-margin.cv.simp.1 = system.time({
-
-  SVM.Margin.par.simp = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = 10^c(-2.5))
+  SVM.Margin.par.simp = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
 
   })
 
-margin.train.simp.1 = system.time({
+train.simp1 = system.time({
   
-SVM.final.margin.model.simp = Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = SVM.Margin.par$cost)
+SVM.final.margin.model.simp = Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = SVM.Margin.par.simp$cost)
 
 })
 
-margin.pred.simp.1 = system.time({
+pred.simp1 = system.time({
   
-SVM.margin.test.error.simp = Test.SVM(SVM.final.margin.model,val = dat.simp.test,class = class.test)
+SVM.margin.test.error.simp = Test.SVM(SVM.final.margin.model.simp,val = dat.simp.test,class = class.test)
 
 })
 
 SVM.Margin.par.simp
 
 SVM.margin.test.error.simp
+##########################################################################################################################
+##############################################################
+#SVM with soft margin on Simplified Feature and gray features#
+##############################################################
+
+#> cv.simp2
+#用户    系统    流逝 
+#1226.29   10.75 1362.59 
+#> train.simp2
+#用户  系统  流逝 
+#58.64  0.69 67.94 
+#> pred.simp2
+#用户 系统 流逝 
+#6.33 0.07 7.97 
+
+
+
+#> SVM.Margin.par.simp.gray
+#$cost
+#[1] 0.001
+
+#$cv.error
+#[1] 0.19
+
+#$frame
+#cost  cv.error
+#1 0.000100000 0.4053333
+#2 0.001000000 0.1900000
+#3 0.003162278 0.1913333
+#4 0.010000000 0.1940000
+#5 0.100000000 0.1940000
+
+#> SVM.margin.test.error.simp.gray
+#[1] 0.132
+
+
+cv.simp2 = system.time({
+  
+  SVM.Margin.par.simp.gray = svm.margin.cv(dat.train = dat.simp.gray.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
+  
+})
+
+train.simp2 = system.time({
+  
+  SVM.final.margin.model.simp.gray = Train.SVM.margin(X = dat.simp.gray.train,Y = class.train,cost = SVM.Margin.par.simp.gray$cost)
+  
+})
+
+pred.simp2 = system.time({
+  
+  SVM.margin.test.error.simp.gray = Test.SVM(SVM.final.margin.model.simp.gray,val = dat.simp.gray.test,class = class.test)
+  
+})
+
+SVM.Margin.par.simp.gray
+
+SVM.margin.test.error.simp.gray
+
 
 #############################################################################################
 ###############################################
@@ -132,27 +211,67 @@ SVM.margin.test.error.simp
 #[1] 0.51
 
 
-margin.cv.ori.2 = system.time({
+cv.ori1 = system.time({
   
-  SVM.Margin.par.ori = svm.margin.cv(dat.train = dat.ori.train, class.train = class.train, cost = 10^(-2.5))
-  
-})
-
-margin.train.ori.2 = system.time({
-  
-  SVM.final.margin.mdoel.ori = Train.SVM.margin(X = dat.ori.train,Y = class.train,cost = SVM.Margin.par$cost)
+  SVM.Margin.par.ori = svm.margin.cv(dat.train = dat.ori.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
   
 })
 
-margin.pred.ori.2 = system.time({
+train.ori1 = system.time({
   
-  SVM.margin.test.error.ori = Test.SVM(SVM.final.margin.mdoel,val = dat.ori.test,class = class.test)
+  SVM.final.margin.mdoel.ori = Train.SVM.margin(X = dat.ori.train,Y = class.train,cost = SVM.Margin.par.ori$cost)
+  
+})
+
+pred.ori1 = system.time({
+  
+  SVM.margin.test.error.ori = Test.SVM(SVM.final.margin.mdoel.ori,val = dat.ori.test,class = class.test)
   
 })
 
 SVM.Margin.par.ori
 
 SVM.margin.test.error.ori
+
+
+################################################################
+#SVM with soft margin on Original Sift Feature and gray feature#
+################################################################
+
+
+cv.ori2 = system.time({
+  
+  SVM.Margin.par.ori.gray = svm.margin.cv(dat.train = dat.ori.gray.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
+  
+})
+
+train.ori2 = system.time({
+  
+  SVM.final.margin.mdoel.ori.gray = Train.SVM.margin(X = dat.ori.gray.train,Y = class.train,cost = SVM.Margin.par.ori.gray$cost)
+  
+})
+
+pred.ori2 = system.time({
+  
+  SVM.margin.test.error.ori.gray = Test.SVM(SVM.final.margin.mdoel.ori.gray,val = dat.ori.gray.test,class = class.test)
+  
+})
+
+SVM.Margin.par.ori.gray
+
+SVM.margin.test.error.ori.gray
+
+
+
+
+
+
+
+
+
+
+
+#####################################################################################################################################################
 
 ############################################################
 #SVM with soft margin and kernel on Simplified sift Feature#
