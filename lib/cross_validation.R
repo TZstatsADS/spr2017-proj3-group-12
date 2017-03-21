@@ -40,7 +40,8 @@ svm.margin.cv = function(dat.train, class.train, cost)
   ###  -  class.train : a vector contains classes for each row of X
   ###  -  cost : specify the cost of the margin
   
-  ### Output: a list contains the best cost parameter, along with the coresponding error, as well as a data frame conclude all cost values and error rates
+  ### Output: a list contains the best cost parameter, along with the coresponding error, 
+  ###         as well as a data frame conclude all cost values and error rates.
   
   val.err.cost.interm = numeric(5)
   val.err.cost.f = numeric(length(cost))
@@ -85,7 +86,8 @@ svm.kernel.cv = function(dat.train, class.train, cost, gamma)
   ###  -  cost : specify the cost of the margin
   ###  -  gamma: specify the bandwidth for RBF kernel
   
-  ### Output: a list contains the best cost and gamma parameter, along with the coresponding error, as well as a data frame conclude all cost and gamma values and error rates
+  ### Output: a list contains the best cost and gamma parameter, 
+  ###         along with the coresponding error, as well as a data frame conclude all cost and gamma values and error rates.
   
   folds = cut(seq(1,nrow(dat.train)),breaks=5,labels=FALSE)
   val.par.frame = data.frame(cost = as.vector(mapply(rep,cost,length(gamma))), gamma = rep(gamma,length(cost)), error = NA)

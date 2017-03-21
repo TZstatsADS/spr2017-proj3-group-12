@@ -13,7 +13,7 @@ new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"
 if(length(new.packages)) install.packages(new.packages)
 
 library(e1071)
-library(ggplot2)
+#library(ggplot2)
 source("./lib/train.R")
 source("./lib/test.R")
 source("./lib/cross_validation.R")
@@ -53,57 +53,55 @@ class.test = class.test[,1]
 
 #data.all = data.all[which(apply(data.all,1,sd)>summary(apply(data.all,1,sd))[2]),]
 
+############################################
+#SVM with soft margin on Simplified Feature#
+############################################
+
+###################
+#cost = 0.01
+
+#cv.error = 0.2993333
+
+#   cost  cv.error
+#1 1e-04 0.7993333
+#2 1e-03 0.3040000
+#3 1e-02 0.2993333
+#4 1e-01 0.2993333
+
+#Test Error
+#  0.228
 #################
-#Data Processing#
+
+#$cost
+#[1] 0.003162278    10^-2.5
+
+#$cv.error
+#[1] 0.2973333
+
+#$frame
+#cost  cv.error
+#1 0.031622777 0.2993333
+#2 0.003162278 0.2973333
+
+#Test error
+#0.222
+
 #################
+#FINAL VALUE: 10^-2.5 Test err = 0.222  val.err 0.297333
 
+margin.cv.simp.1 = system.time({
 
-#n_case = dim(data.all)[2]
-
-#n_feature = dim(data.all)[1]
-
-#Split 25% of the data as testing data
-
-#Reshuffle the data
-#index = sample(1:n_case, n_case, replace = F)
-#data.all = data.all[,index]
-#class.all = class.all[index,]
-
-#Transform class 0 (chicken) to -1
-#class.all = ifelse(class.all == 0, -1, 1)
-
-#Split the data
-#test.index = sample(1:n_case, n_case*0.25, replace = F)
-
-#data.other = data.all[,-test.index]
-
-#data.other = t(data.other)
-
-#class.other = class.all[-test.index]
-
-#data.test = data.all[,test.index]
-
-#data.test = t(data.test)
-
-#class.test = class.all[test.index]
-
-
-######################
-#SVM with soft margin#
-######################
-margin.cv.simp = system.time({
-
-  SVM.Margin.par = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = c(1,2,0.01,0.5,0.05,0.00005,0.3))
+  SVM.Margin.par = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = 10^c(-2.5))
 
   })
 
-margin.train.simp = system.time({
+margin.train.simp.1 = system.time({
   
 SVM.final.margin.model = Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = SVM.Margin.par$cost)
 
 })
 
-margin.pred.simp = system.time({
+margin.pred.simp.1 = system.time({
   
 SVM.margin.test.error = Test.SVM(SVM.final.margin.model,val = dat.simp.test,class = class.test)
 
@@ -114,19 +112,39 @@ SVM.Margin.par
 SVM.margin.test.error
 
 #############################################################################################
-margin.cv.ori = system.time({
+###############################################
+#SVM with soft margin on Original Sift Feature#
+###############################################
+
+#$cost
+#[1] 1e-04
+
+#$cv.error
+#[1] 0.8913333
+
+#$frame
+#cost  cv.error
+#1 1e-04 0.8913333
+#2 1e-03 0.8913333
+#3 1e-02 0.8913333
+#4 1e-01 0.8913333
+#> SVM.margin.test.error
+#[1] 0.51
+
+
+margin.cv.ori.2 = system.time({
   
-  SVM.Margin.par = svm.margin.cv(dat.train = dat.ori.train, class.train = class.train, cost = c(0.01))
+  SVM.Margin.par = svm.margin.cv(dat.train = dat.ori.train, class.train = class.train, cost = 10^(-2.5))
   
 })
 
-margin.train.ori = system.time({
+margin.train.ori.2 = system.time({
   
   SVM.final.margin.mdoel = Train.SVM.margin(X = dat.ori.train,Y = class.train,cost = SVM.Margin.par$cost)
   
 })
 
-margin.pred.ori = system.time({
+margin.pred.ori.2 = system.time({
   
   SVM.margin.test.error = Test.SVM(SVM.final.margin.mdoel,val = dat.ori.test,class = class.test)
   
@@ -136,13 +154,13 @@ SVM.Margin.par
 
 SVM.margin.test.error
 
-#################################
-#SVM with soft margin and kernel#
-#################################
+############################################################
+#SVM with soft margin and kernel on Simplified sift Feature#
+############################################################
 
 kernel.cv.simp = system.time({
   
-SVM.kernel.par = svm.kernel.cv(dat.train = dat.simp.train, class.train = class.train, cost = 1, gamma = 0.0005)
+SVM.kernel.par = svm.kernel.cv(dat.train = dat.simp.train, class.train = class.train, cost = 10^( -4: -1), gamma = 2^(seq(-10, 0, 0.5)))
 
 })
 
@@ -163,10 +181,13 @@ SVM.kernel.par
 SVM.kernel.test.error
 
 ####################################################################################################################################
+##########################################################
+#SVM with soft margin and kernel on Original sift Feature#
+##########################################################
 
 kernel.cv.ori = system.time({
   
-  SVM.kernel.par = svm.kernel.cv(dat.train = dat.ori.train, class.train = class.train, cost = 1, gamma = 0.0005)
+  SVM.kernel.par = svm.kernel.cv(dat.train = dat.ori.train, class.train = class.train, cost = 10^( -4: -1), gamma = 2^(seq(-10, 0, 0.5)))
   
 })
 
