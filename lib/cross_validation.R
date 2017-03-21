@@ -109,7 +109,7 @@ svm.kernel.cv = function(dat.train, class.train, cost, gamma)
       #Prediction on validation data with current cost and current gamma at current iteration
       pred = predict(model,val.data)
       #Validaiton error at this iteration with current gamma and cost
-      val.err.i[i] = mean(pred != val.class)
+      val.err.i[j] = mean(pred != val.class)
       
     }
     val.par.frame$error[i] = mean(val.err.i)
