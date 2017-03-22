@@ -110,6 +110,17 @@ dat.ori.gray.test = t(dat.ori.gray.test)
 #[1] 0.2
  
 
+#cost     error            class
+#1  0.000100000 0.7866667 Validation Error
+#2  0.001000000 0.2880000 Validation Error
+#3  0.003162278 0.3000000 Validation Error
+#4  0.010000000 0.3080000 Validation Error
+#5  0.100000000 0.3080000 Validation Error
+#6  0.000100000 0.2220000       Test Error
+#7  0.001000000 0.2000000       Test Error
+#8  0.003162278 0.2080000       Test Error
+#9  0.010000000 0.2380000       Test Error
+#10 0.100000000 0.2380000       Test Error
 cv.simp1 = system.time({
 
   SVM.Margin.par.simp = svm.margin.cv(dat.train = dat.simp.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
@@ -128,22 +139,24 @@ SVM.margin.test.error.simp = Test.SVM(SVM.final.margin.model.simp,val = dat.simp
 
 })
 
-#data.plot.1 = data.frame(cost = c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.7866667,0.288,0.3,0.308,0.308),test.error=NA)
+data.plot.1 = data.frame(cost = c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.7866667,0.288,0.3,0.308,0.308),test.error=NA)
 
-#for(i in 1 : length(data.plot.1$cost))
-#{
- # data.plot.1$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = data.plot.1$cost[i]),val = dat.simp.test,class = class.test)
-#}
+for(i in 1 : length(data.plot.1$cost))
+{
+ data.plot.1$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = data.plot.1$cost[i]),val = dat.simp.test,class = class.test)
+}
 
-#data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.1$cv.error,data.plot.1$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
+data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.1$cv.error,data.plot.1$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
 
 #jpeg(filename = "../figs/LinearSVM_Simplified Sift feature and Gray feature.jpg")
 
-#ggplot(data=data.plot.22)+
- # geom_point(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
-#  geom_line(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
- # labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
-  #scale_color_discrete(name ="Error Type")
+ggplot(data=data.plot.22)+
+  geom_point(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+  geom_line(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+  labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
+  scale_color_discrete(name ="Error Type")
+
+jpeg(filename = "../figs/LinearSVM_SimpSift.jpg")
 
 SVM.Margin.par.simp
 
@@ -182,20 +195,35 @@ SVM.margin.test.error.simp
 
 #> SVM.margin.test.error.simp.gray
 #[1] 0.132
-#data.plot.2 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.4053333,0.19,0.1913333,0.194,0.194),test.error=NA)
-#for(i in 1 : length(data.plot.2$cost))
-#{
-#  data.plot.2$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.gray.train,Y = class.train,cost = data.plot.2$cost[i]),val = dat.simp.gray.test,class = class.test)
-#}
-#data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.2$cv.error,data.plot.2$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
 
-#jpeg(filename = "../figs/LinearSVM_Simplified Sift feature and Gray feature.jpg")
 
-#ggplot(data=data.plot.22)+
- # geom_point(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
-#  geom_line(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
- # labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
-  #scale_color_discrete(name ="Error Type")
+#cost     error            class
+#1  0.000100000 0.4053333 Validation Error
+#2  0.001000000 0.1900000 Validation Error
+#3  0.003162278 0.1913333 Validation Error
+#4  0.010000000 0.1940000 Validation Error
+#5  0.100000000 0.1940000 Validation Error
+#6  0.000100000 0.1040000       Test Error
+#7  0.001000000 0.1320000       Test Error
+#8  0.003162278 0.1380000       Test Error
+#9  0.010000000 0.1440000       Test Error
+#10 0.100000000 0.1440000       Test Error
+
+data.plot.2 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.4053333,0.19,0.1913333,0.194,0.194),test.error=NA)
+for(i in 1 : length(data.plot.2$cost))
+{
+  data.plot.2$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.gray.train,Y = class.train,cost = data.plot.2$cost[i]),val = dat.simp.gray.test,class = class.test)
+}
+data.plot.33 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.2$cv.error,data.plot.2$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
+
+
+ggplot(data=data.plot.33)+
+  geom_point(mapping = aes(x=data.plot.33$cost,y=data.plot.33$error,col=data.plot.33$class))+
+  geom_line(mapping = aes(x=data.plot.33$cost,y=data.plot.33$error,col=data.plot.33$class))+
+  labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
+  scale_color_discrete(name ="Error Type")
+
+jpeg(filename = "../figs/LinearSVM_SimpSift_and_Gray.jpg")
 
 cv.simp2 = system.time({
   
