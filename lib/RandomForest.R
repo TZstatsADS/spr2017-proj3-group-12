@@ -1,6 +1,6 @@
-setwd("C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
+#setwd("C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
 
-install.packages("randomForest")
+#install.packages("randomForest")
 library("randomForest")
 
 #Function used to explore and validate various random forest parameters. From this, it was determined that no more than 500 trees are needed.

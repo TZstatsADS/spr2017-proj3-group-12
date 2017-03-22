@@ -1,7 +1,7 @@
-setwd("C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
+#setwd("C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
 
-install.packages("gbm")
-install.packages("caret")
+#install.packages("gbm")
+#install.packages("caret")
 
 library("gbm")
 library("caret")
@@ -25,6 +25,7 @@ ExploreGBM = function(feature_filename, labels_filename)
 
 TrainGBM = function(feature_filename,labels_filename, param_trees = 500, full_feature = FALSE)
 {
+  #Using optimal features for training set as computed by ExploreGBM
   t = proc.time()
   image_features = t(read.csv(feature_filename))
   image_labels = unlist(read.csv(labels_filename))
