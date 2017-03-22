@@ -8,6 +8,7 @@
 
 dataSplit = function(percentage = 1)
 {
+  #Note: Non-useful ouputs are all muted to save time
   source("../lib/feature.R")
   
   sift.ori = read.csv("../data/sift_features.csv")
