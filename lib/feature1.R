@@ -3,14 +3,15 @@
 ### Construct features out of images for training/testing ###
 #############################################################
 
-# CONSTRUCTS HARMONIC COEFFICIENTS FROM ELLIPTICAL FOURIER OUTLINE ANALYSIS
+# CONSTRUCTS GRAYSCALE FEATURE
 
-setwd("~/Desktop/sem 2/Applied data science/spr2017-proj3-group-12/data")
 
 source("http://bioconductor.org/biocLite.R")
 biocLite("EBImage")
 library(EBImage)
 
+
+setwd("~/Desktop/sem 2/Applied data science/spr2017-proj3-group-12/data")
 img_dir <- "~/Desktop/sem 2/Applied data science/Proj3/training_data/raw_images"
 
 n_files <- length(list.files(img_dir))
@@ -22,12 +23,7 @@ feature <- function(img_dir) {
   ### img_dir: class "character", path to directory of images to be processed
   
   ##### CURRENT STATUS (2016/03/18 19:30): 
-  ##### This function constructs only harmonic coefficient features.
-  ##### WARNING: This function also writes a new processed image file per image.
-  #####          This will thus double the number of images in your image directory.
-  ##### Maybe a separate directory for the processed files should be created.
-  ##### Running time on Arnold's computer:
-  ##### user: 2655.92 system: 43.69 elapsed 2824.62 (approx 47 minutes)
+  ##### This function constructs only grayscale features.
   
   file_names <- list.files(img_dir, pattern = "[[:digit:]].jpg")
   file_names <- sort(file_names)
