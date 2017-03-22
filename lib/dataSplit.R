@@ -6,18 +6,22 @@
 ### Project 3
 ### ADS spring 2017
 
-dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the new test data provided in class
+dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the new test data provided in class(Default : No)
 {
   #Note: Non-useful ouputs are all muted to save time
   source("../lib/feature.R")
+  library("EBImage")#Rememner to run this package before you do anything!!!!!!!!!
   if(!test)
-  {sift.ori = read.csv("../data/train_data/sift_features.csv")
+  {
+    sift.ori = read.csv("../data/train_data/sift_features.csv")
   
-  gray_feature <- feature.gray()
+    gray_feature <- feature.gray()
   
-  write.csv(gray_feature, file = "../data/train_data/gray.csv")
+    write.csv(gray_feature, file = "../data/train_data/gray.csv")
   
-  gray = read.csv("../data/train_data/gray.csv")}
+    gray = read.csv("../data/train_data/gray.csv")
+  
+  }
   else if(test)
   {
     sift.ori = read.csv("../data/test_data/sift_features.csv")
@@ -48,7 +52,8 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   
   #Original Sift features with gray features
   sift.ori.gray = rbind(sift.ori,gray)
-    if(!test)
+  
+  if(!test)
   {labels = read.csv("../data/train_data/labels.csv")}
   
   n = ncol(sift.ori)

@@ -79,9 +79,6 @@ feature.new = function(dat)
 #biocLite("EBImage")
 #library(EBImage)
 
-
-
-
 feature.gray <- function(img_dir = "../data/train_data/raw_images") {
   
   ### Constructs features out of images for training/testing
