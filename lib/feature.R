@@ -100,9 +100,9 @@ feature.gray <- function(img_dir = "../data/train_data") {
   ##### CURRENT STATUS (2016/03/18 19:30): 
   ##### This function constructs only grayscale features.
   
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("EBImage")
-  library(EBImage)
+  #source("http://bioconductor.org/biocLite.R")
+  #biocLite("EBImage")
+  #library(EBImage)
   
   n_files <- length(list.files(img_dir))
   file_names <- list.files(img_dir, pattern = "[[:digit:]].jpg")

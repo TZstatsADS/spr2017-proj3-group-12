@@ -6,21 +6,31 @@
 ### Project 3
 ### ADS spring 2017
 
-dataSplit = function(percentage = 1)
+dataSplit = function(percentage = 1, test = F)
 {
   #Note: Non-useful ouputs are all muted to save time
   source("../lib/feature.R")
-  
-  sift.ori = read.csv("../data/sift_features.csv")
-  
-  #image_features_new = read.csv("../data/sift.feature.New.csv")
-  sift.simp = feature.new(sift.ori)
+  if(!test)
+  {sift.ori = read.csv("../data/train_data/sift_features.csv")
   
   gray_feature <- feature.gray()
   
-  write.csv(gray_feature, file = "../data/gray.testing.csv")
+  write.csv(gray_feature, file = "../data/train_data/gray.csv")
   
-  gray = read.csv("../data/gray.testing.csv")
+  gray = read.csv("../data/train_data/gray.csv")}
+  else if(test)
+  {
+    sift.ori = read.csv("../data/test_data/sift_features.csv")
+    
+    gray_feature <- feature.gray()
+    
+    write.csv(gray_feature, file = "../data/test_data/gray.testing.csv")
+    
+    gray = read.csv("../data/test_data/gray.testing.csv")
+  }
+  
+  #image_features_new = read.csv("../data/sift.feature.New.csv")
+  sift.simp = feature.new(sift.ori)
   
   #Remove the first column of observation numbers
   gray = gray[,2:2001]
@@ -38,8 +48,8 @@ dataSplit = function(percentage = 1)
   
   #Original Sift features with gray features
   sift.ori.gray = rbind(sift.ori,gray)
-    
-  labels = read.csv("../data/labels.csv")
+    if(!test)
+  {labels = read.csv("../train_data/labels.csv")}
   
   n = ncol(sift.ori)
   
@@ -53,19 +63,25 @@ dataSplit = function(percentage = 1)
   #Output Simplified sift features into test and train set
   #write.csv(sift.simp[,-test_rows], file = "../data/sift_simp_train.csv", row.names = FALSE)
   #write.csv(sift.simp[,test_rows], file = "../data/sift_simp_test.csv", row.names = FALSE)
-  
-  #Output simplified sift features with gray features into test and train set
-  write.csv(sift.simp.gray[,-test_rows], file = "../data/sift_simp_gray_train.csv", row.names = FALSE)
-  write.csv(sift.simp.gray[,test_rows], file = "../data/sift_simp_gray_test.csv", row.names = FALSE)
+ 
+  if(!test) 
+  {#Output simplified sift features with gray features into test and train set
+  write.csv(sift.simp.gray[,-test_rows], file = "../data/train_data/sift_simp_gray_train.csv", row.names = FALSE)
+  write.csv(sift.simp.gray[,test_rows], file = "../data/train_data/sift_simp_gray_test.csv", row.names = FALSE)
   
   #Output original sift features with gray features into test and train set
   #write.csv(sift.ori.gray[,-test_rows], file = "../data/sift_ori_gray_train.csv", row.names = FALSE)
   #write.csv(sift.ori.gray[,test_rows], file = "../data/sift_ori_gray_test.csv", row.names = FALSE)
   
   #output class labels in to test and train set
-  write.csv(labels[-test_rows,], file = "../data/labels_train.csv", row.names = FALSE)
-  write.csv(labels[test_rows,], file = "../data/labels_test.csv", row.names = FALSE)
-  
+  write.csv(labels[-test_rows,], file = "../data/train_data/labels_train.csv", row.names = FALSE)
+  write.csv(labels[test_rows,], file = "../data/train_data/labels_test.csv", row.names = FALSE)}
+  else if(test)
+  {
+    write.csv(sift.simp.gray[,-test_rows], file = "../data/test_data/sift_simp_gray_train.csv", row.names = FALSE)
+    write.csv(sift.simp.gray[,test_rows], file = "../data/test_data/sift_simp_gray_test.csv", row.names = FALSE)
+    
+  }
   
   
 }
