@@ -1,3 +1,8 @@
+import numpy as np
+import numpy.linalg as la
+import scipy.special as scs
+import matplotlib.pyplot as plt
+
 def load_data():
     x_test = np.genfromtxt('/Users/ptfairy/Desktop/training_data/X_test.csv', delimiter=',')
     y_test = np.genfromtxt('/Users/ptfairy/Desktop/training_data/y_test.csv', delimiter=',')
