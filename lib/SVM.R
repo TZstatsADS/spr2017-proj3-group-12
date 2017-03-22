@@ -14,56 +14,56 @@ if(length(new.packages)) install.packages(new.packages)
 
 library(e1071)
 #library(ggplot2)
-source("./lib/train.R")
-source("./lib/test.R")
-source("./lib/cross_validation.R")
+source("../lib/train.R")
+source("../lib/test.R")
+source("../lib/cross_validation.R")
 
-dat.ori.train = read.csv("./data/sift_ori_train.csv",header = T)
+dat.ori.train = read.csv("../data/sift_ori_train.csv",header = T)
 
 dat.ori.train = t(dat.ori.train)
 
 
-dat.ori.test = read.csv("./data/sift_ori_test.csv",header = T)
+dat.ori.test = read.csv("../data/sift_ori_test.csv",header = T)
 
 dat.ori.test = t(dat.ori.test)
 
 
-dat.simp.train = read.csv("./data/sift_simp_train.csv",header = T)
+dat.simp.train = read.csv("../data/sift_simp_train.csv",header = T)
 
 dat.simp.train = t(dat.simp.train)
 
 
-dat.simp.test = read.csv("./data/sift_simp_test.csv",header = T)
+dat.simp.test = read.csv("../data/sift_simp_test.csv",header = T)
 
 dat.simp.test = t(dat.simp.test)
 
 
-class.train = read.csv("./data/labels_train.csv",header = T)
+class.train = read.csv("../data/labels_train.csv",header = T)
 
 class.train = class.train[,1]
 
 
-class.test = read.csv("./data/labels_test.csv",header = T)
+class.test = read.csv("../data/labels_test.csv",header = T)
 
 class.test = class.test[,1]
 
 
-dat.simp.gray.train = read.csv("./data/sift_simp_gray_train.csv",header = T)
+dat.simp.gray.train = read.csv("../data/sift_simp_gray_train.csv",header = T)
 
 dat.simp.gray.train = t(dat.simp.gray.train)
 
 
-dat.simp.gray.test = read.csv("./data/sift_simp_gray_test.csv",header = T)
+dat.simp.gray.test = read.csv("../data/sift_simp_gray_test.csv",header = T)
 
 dat.simp.gray.test = t(dat.simp.gray.test)
 
 
-dat.ori.gray.train = read.csv("./data/sift_ori_gray_train.csv",header = T)
+dat.ori.gray.train = read.csv("../data/sift_ori_gray_train.csv",header = T)
 
 dat.ori.gray.train = t(dat.ori.gray.train)
 
 
-dat.ori.gray.test = read.csv("./data/sift_ori_gray_test.csv",header = T)
+dat.ori.gray.test = read.csv("../data/sift_ori_gray_test.csv",header = T)
 
 dat.ori.gray.test = t(dat.ori.gray.test)
 
@@ -79,13 +79,13 @@ dat.ori.gray.test = t(dat.ori.gray.test)
 
 
 #> cv.simp1
-#用户    系统    流逝 
+#用户    系统    流??? 
 #1117.16   10.28 1260.41 
 #> train.simp1
-#用户  系统  流逝 
+#用户  系统  流??? 
 #63.11  0.34 67.17 
 #> pred.simp1
-#用户 系统 流逝 
+#用户 系统 流??? 
 #6.63 0.13 7.56 
 
 
@@ -128,6 +128,23 @@ SVM.margin.test.error.simp = Test.SVM(SVM.final.margin.model.simp,val = dat.simp
 
 })
 
+#data.plot.1 = data.frame(cost = c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.7866667,0.288,0.3,0.308,0.308),test.error=NA)
+
+#for(i in 1 : length(data.plot.1$cost))
+#{
+ # data.plot.1$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = data.plot.1$cost[i]),val = dat.simp.test,class = class.test)
+#}
+
+#data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.1$cv.error,data.plot.1$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
+
+#jpeg(filename = "../figs/LinearSVM_Simplified Sift feature and Gray feature.jpg")
+
+#ggplot(data=data.plot.22)+
+ # geom_point(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+#  geom_line(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+ # labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
+  #scale_color_discrete(name ="Error Type")
+
 SVM.Margin.par.simp
 
 SVM.margin.test.error.simp
@@ -137,13 +154,13 @@ SVM.margin.test.error.simp
 ##############################################################
 
 #> cv.simp2
-#用户    系统    流逝 
+#用户    系统    流??? 
 #1226.29   10.75 1362.59 
 #> train.simp2
-#用户  系统  流逝 
+#用户  系统  流??? 
 #58.64  0.69 67.94 
 #> pred.simp2
-#用户 系统 流逝 
+#用户 系统 流??? 
 #6.33 0.07 7.97 
 
 
@@ -165,11 +182,24 @@ SVM.margin.test.error.simp
 
 #> SVM.margin.test.error.simp.gray
 #[1] 0.132
+#data.plot.2 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1),cv.error=c(0.4053333,0.19,0.1913333,0.194,0.194),test.error=NA)
+#for(i in 1 : length(data.plot.2$cost))
+#{
+#  data.plot.2$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.gray.train,Y = class.train,cost = data.plot.2$cost[i]),val = dat.simp.gray.test,class = class.test)
+#}
+#data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.2$cv.error,data.plot.2$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
 
+#jpeg(filename = "../figs/LinearSVM_Simplified Sift feature and Gray feature.jpg")
+
+#ggplot(data=data.plot.22)+
+ # geom_point(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+#  geom_line(mapping = aes(x=data.plot.22$cost,y=data.plot.22$error,col=data.plot.22$class))+
+ # labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
+  #scale_color_discrete(name ="Error Type")
 
 cv.simp2 = system.time({
   
-  SVM.Margin.par.simp.gray = svm.margin.cv(dat.train = dat.simp.gray.train, class.train = class.train, cost = 10^c(-4,-3,-2.5,-2,-1))
+  SVM.Margin.par.simp.gray = svm.margin.cv(dat.train = dat.simp.gray.train, class.train = class.train, cost = 10^c(-5,-6,1,2,3))
   
 })
 
