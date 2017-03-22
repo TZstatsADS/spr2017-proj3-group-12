@@ -2,7 +2,9 @@
 ### Construct visual features for training/testing images ###
 #############################################################
 
-### Authors: Yuting Ma/Tian Zheng
+### Authors: Yuting Ma/Tian Zheng(feature)
+###          Boxuan Zhao(feature.new)
+###          Boya Zhao(feature.gray)
 ### Project 3
 ### ADS Spring 2017
 
@@ -38,14 +40,6 @@ feature <- function(img_dir, set_name, data_name="data", export=T){
   return(dat)
 }
 
-#feature.new = function()
-#{
- # y <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/labels.csv", header = T)
-  #oriData <- read.csv("D:/Columbia University/Spring2017-Applied Data Science/Project_3_Bz2290/spr2017-proj3-group-12/data/sift_features.csv", header = T)
-  #X <- oriData
-  #n_feature <- nrow(X)
-  #n_case <- ncol(X)
-#}
 feature.new = function(dat)
 {
   variation = apply(dat,1,sd) 
@@ -86,12 +80,9 @@ feature.new = function(dat)
 #library(EBImage)
 
 
-#setwd("~/Desktop/sem 2/Applied data science/spr2017-proj3-group-12/data")
-#img_dir <- "~/Desktop/sem 2/Applied data science/Proj3/training_data/raw_images"
 
-#n_files <- length(list.files(img_dir))
 
-feature.gray <- function(img_dir = "../data/train_data") {
+feature.gray <- function(img_dir = "../data/train_data/raw_images") {
   
   ### Constructs features out of images for training/testing
   
@@ -115,7 +106,7 @@ feature.gray <- function(img_dir = "../data/train_data") {
   
   gray_feature <- matrix(NA, nrow = 256, ncol = n_files)
   
-  #       constructed for those images
+  #constructed for those images
   for (i in 1:n_files) {
     tryCatch({
       img_gray <- readImage(file_paths[i])
