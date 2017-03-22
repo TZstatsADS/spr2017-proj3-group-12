@@ -13,7 +13,7 @@ new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"
 if(length(new.packages)) install.packages(new.packages)
 
 library(e1071)
-#library(ggplot2)
+library(ggplot2)
 source("../lib/train.R")
 source("../lib/test.R")
 source("../lib/cross_validation.R")
@@ -146,7 +146,7 @@ for(i in 1 : length(data.plot.1$cost))
  data.plot.1$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.train,Y = class.train,cost = data.plot.1$cost[i]),val = dat.simp.test,class = class.test)
 }
 
-data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.1$cv.error,data.plot.1$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
+data.plot.22 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.1$cv.error,0.2220000,0.200,0.208,0.238,0.2380),class=c(rep("Validation Error",5),rep("Test Error",5)))
 
 #jpeg(filename = "../figs/LinearSVM_Simplified Sift feature and Gray feature.jpg")
 
@@ -214,13 +214,13 @@ for(i in 1 : length(data.plot.2$cost))
 {
   data.plot.2$test.error[i] = Test.SVM(Train.SVM.margin(X = dat.simp.gray.train,Y = class.train,cost = data.plot.2$cost[i]),val = dat.simp.gray.test,class = class.test)
 }
-data.plot.33 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.2$cv.error,data.plot.2$test.error),class=c(rep("Validation Error",5),rep("Test Error",5)))
+data.plot.33 = data.frame(cost=c(0.0001,0.001,0.003162278,0.01,0.1,0.0001,0.001,0.003162278,0.01,0.1),error = c(data.plot.2$cv.error,0.10400,0.1320,0.1380,0.144,0.144),class=c(rep("Validation Error",5),rep("Test Error",5)))
 
 
 ggplot(data=data.plot.33)+
   geom_point(mapping = aes(x=data.plot.33$cost,y=data.plot.33$error,col=data.plot.33$class))+
   geom_line(mapping = aes(x=data.plot.33$cost,y=data.plot.33$error,col=data.plot.33$class))+
-  labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature")+
+  labs(x="Cost",y="Error rates",title="Linear SVM on SImplified Sift feature and Gray feature")+
   scale_color_discrete(name ="Error Type")
 
 jpeg(filename = "../figs/LinearSVM_SimpSift_and_Gray.jpg")
