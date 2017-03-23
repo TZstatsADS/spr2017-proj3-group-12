@@ -100,7 +100,7 @@ if(run.feature.train){
     #                                                 export=TRUE))
 #}
 
-#save(dat_train, file="./output/feature_train.RData")
+save(dat_train, file="./output/feature_train.RData")
 #save(dat_test, file="./output/feature_test.RData")
 ```
 
