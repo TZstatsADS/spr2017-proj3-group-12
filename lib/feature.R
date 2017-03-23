@@ -46,7 +46,7 @@ feature <- function(img_dir="../data/training_data/raw_images") {
     error = function(c) "invalid or corrupt JPEG file")
   }
   
-  sift.simp = read.csv("../data/training_data/sift_features.csv",sep="")
+  sift.simp = read.csv("../data/training_data/sift_features.csv")
   
   variation = apply(sift.simp,1,sd) 
   
@@ -78,7 +78,7 @@ feature <- function(img_dir="../data/training_data/raw_images") {
   #Simplified Sift Features with gray features
   sift.simp.gray = rbind(sift.simp,gray_feature)
   
-  return(sift.simp.gray)
+  return(sift.simp.gray)#Return a list here
 }
 
 
