@@ -29,7 +29,7 @@ library("EBImage")
 ### Step 0: specify directories.
 
 This directory should be set to the lib folder of the cloned repository
-```{r "setup"", eval=FALSE}
+```{r "setup"}
 knitr::opts_knit$set(root.dir = "C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
@@ -54,9 +54,9 @@ gbm_model_modified_features = "../output/GBMModifiedFeature.RData"
 rf_model_modified_features = "../output/RFModifiedFeature.RData"
 
 gbm_model_original_predict = "../output/GBMFullFeaturePredictions.csv"
-rf_model_original_predict = "../output/RFFullFeature.RData"
+rf_model_original_predict = "../output/RFFullFeaturePredictions.csv"
 gbm_model_modified_predict = "../output/GBMModifiedPredictions.csv"
-rf_model_modified_predict = "../output/RFModifiedFeature.RData"
+rf_model_modified_predict = "../output/RFModifiedPredictions.csv"
 ```
 
 ### Step 1: set up controls for evaluation experiments.
@@ -148,7 +148,7 @@ source("../lib/test.R")
 ```{r runcv, warning=FALSE}
 
 train_models(original_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
-train_models(modified_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
+train_models(modified_data_train, labels_train, full_feature = FALSE, run_cv = run.cv, run_OOB = run.OOB, K = K)
 
 ```
 
@@ -182,9 +182,9 @@ if(run.test){
 
   load(gbm_model_original_features)
   load(rf_model_original_features)
-  test(tune_gbm, image_rf, original_data_test, full_feature = FALSE)
-  rf_predict = unlist(read.csv(rf_model_original_predict))
-  gbm_predict = unlist(read.csv(gbm_model_original_predict))
+  test_models(tune_gbm, image_rf, original_data_test, full_feature = TRUE)
+  rf_predict = read.csv(rf_model_original_predict)$x
+  gbm_predict = read.csv(gbm_model_original_predict)$x
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
@@ -205,9 +205,9 @@ tm_test=NA
 if(run.test){
   load(gbm_model_modified_features)
   load(rf_model_modified_features)
-  test(tune_gbm, image_rf, modified_data_test, full_feature = FALSE)
-  rf_predict = unlist(read.csv(rf_model_modified_predict))
-  gbm_predict = unlist(read.csv(gbm_model_modified_predict))
+  test_models(tune_gbm, image_rf, modified_data_test, full_feature = FALSE)
+  rf_predict = read.csv(rf_model_modified_predict)$x
+  gbm_predict = read.csv(gbm_model_modified_predict)$x
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
