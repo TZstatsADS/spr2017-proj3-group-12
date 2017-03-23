@@ -161,7 +161,7 @@ if(run.cv){
     #cat("k=", k, "\n")
     #err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
   #}
-  ExploreGBM(feature_filename, labels_filename)
+  train("../data/sift_ori_train.csv", "labels_train.csv", full_feature = TRUE)
   #save(err_cv, file="../output/err_cv.RData")
 }
 ```
@@ -241,6 +241,7 @@ if(run.cv){
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
+train("../data/sift_simp_gray_train.csv", "labels_train.csv", full_feature = FALSE)
 #tm_train=NA
 #tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
 #save(fit_train, file="../output/fit_train.RData")
@@ -252,6 +253,11 @@ if(run.cv){
 ```{r test}
 tm_test=NA
 if(run.test){
+  load("../output/GBMModifiedFeature.Rdata")
+  load("../output/RFModifiedFeature.RData")
+  test(tune_gbm, image_rf, "../data/sift_simp_gray_test.csv", full_feature = FALSE)
+  rf_predict = read.csv("../output/RFModifiedPredictions.csv")
+  gbm_predict = read.csv("../output/GBMModifiedPredictions.csv")
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
   #tm_test <- system.time(pred_test <- test(fit_train, dat_test))

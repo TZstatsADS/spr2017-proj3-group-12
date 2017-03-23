@@ -76,6 +76,7 @@ dataSplit = function(percentage = 0.25)#Test indicate do we run on the new test 
 dataSplit.cv = function(percentage = 0.25)
 {
   dat = read.csv("../data/sift_gray_all.csv")
+  sift.ori = read.csv("../data/sift_features.csv")
   
   n = ncol(dat)
   
@@ -86,6 +87,10 @@ dataSplit.cv = function(percentage = 0.25)
   #Output simplified sift features with gray features into test and train set
   write.csv(dat[,-test_rows], file = "../data/sift_simp_gray_train.csv", row.names = FALSE)
   write.csv(dat[,test_rows], file = "../data/sift_simp_gray_test.csv", row.names = FALSE)
+  
+  #Output original sift features into test and train set
+  write.csv(sift.ori[,-test_rows], file = "../data/sift_ori_train.csv", row.names = FALSE)
+  write.csv(sift.ori[,test_rows], file = "../data/sift_ori_test.csv", row.names = FALSE)
   
   #output class labels in to test and train set
   write.csv(labels[-test_rows,], file = "../data/labels_train.csv", row.names = FALSE)
