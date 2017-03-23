@@ -1,4 +1,4 @@
-feature.gray <- function(img_dir) {
+feature.gray <- function(img_dir="../data/test_data/raw_images") {
     
     ### Constructs features out of images for training/testing
     
@@ -44,12 +44,12 @@ dataSplit.Inclass = function(dir="../data/test_data/", percentage = 0.25)
   ### export: Whether to export data
   #Note: Non-useful ouputs are all muted to save time
   
-  #source("../lib/feature.R")
+  source("../lib/feature.R")
   library("EBImage")#Rememner to run this package before you do anything!!!!!!!!!
   
   sift.ori = read.csv(paste(dir,"sift_features.csv",sep=""))
   
-  gray_feature <- feature.gray(dir)
+  gray_feature <- feature.gray()
   
   sift.simp = feature.new(sift.ori)
   
