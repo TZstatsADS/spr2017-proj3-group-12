@@ -13,7 +13,7 @@
 # CONSTRUCTS GRAYSCALE FEATURE with Sift feature
 
 
-feature <- function(img_dir="../data/training_data/raw_images") {
+feature <- function(img_dir="../data/test_data/raw_images") {
   
   ### Constructs features out of images for training/testing
   

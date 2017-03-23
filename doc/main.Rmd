@@ -14,9 +14,10 @@ list.of.packages <- c("e1071", "ggplot2","gbm","caret","randomForest","EBImage")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) 
   {
-  install.packages(new.packages)
-  source("https://bioconductor.org/biocLite.R")
-  biocLite("EBImage")}
+   install.packages(new.packages)
+   source("https://bioconductor.org/biocLite.R")
+   biocLite("EBImage")
+  }
 
 library("gbm")
 library("ggplot2")
@@ -28,8 +29,8 @@ library("EBImage")
 ### Step 0: specify directories.
 
 ```{r wkdir, eval=FALSE}
-setwd("./ads_spr2017_proj3/lib")
-#setwd("./spr2017-proj3-group-12/lib")
+#setwd("./ads_spr2017_proj3/lib")
+setwd("../spr2017-proj3-group-12/lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
@@ -81,16 +82,23 @@ label_train <- c(rep(0,1000),rep(1,1000))
 
 ```{r feature}
 source("../lib/feature.R")
+source("../lib/DataSplit.R")
 
 tm_feature <- NA
 if(run.feature.train){
-  tm_feature <- system.time({
-    dat_all <- feature(img_dir=image_all.dir)})
-                                    #feature(img_train_dir, 
+  #tm_feature <- system.time({
+   # dat_all <- feature(img_dir=image_all.dir)})
+  #tm_feature <- 
+    feature(img_dir=image_all.dir) 
+                                     #feature(img_train_dir, 
                                      #                  "train", 
                                       #                 data_name="zip", 
                                        #                export=TRUE))
 }
+
+#SPlit the data in to train and test sets
+
+dataSplit.cv()
 
 #tm_feature_train <- NA
 #if(run.feature.train){
@@ -137,24 +145,24 @@ source("../lib/train.R")
 source("../lib/test.R")
 source("../lib/GBM.R")
 source("../lib/RandomForest.R")
-source("../lib/DataSplit.R")
-#Constructing training and testing files
-dataSplit.cv(percentage = 0.25, dat.all)
+#Constructing training and testing files(Stored under DataSplit.R)
+#dataSplit.cv(percentage = 0.25, dat.all)
 ```
 
 #### Model selection with cross-validation
 
 ####For Baseline model GBM
 ```{r runcv, message=FALSE, warning=FALSE}
-source("../lib/cross_validation.R")
+#source("../lib/cross_validation.R")
 
 if(run.cv){
-  err_cv <- array(dim=c(length(model_values), 2))
-  for(k in 1:length(model_values)){
-    cat("k=", k, "\n")
-    err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
-  }
-  save(err_cv, file="../output/err_cv.RData")
+  #err_cv <- array(dim=c(length(model_values), 2))
+  #for(k in 1:length(model_values)){
+    #cat("k=", k, "\n")
+    #err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
+  #}
+  ExploreGBM(feature_filename, labels_filename)
+  #save(err_cv, file="../output/err_cv.RData")
 }
 ```
 
@@ -164,31 +172,31 @@ Visualize cross-validation results.
 if(run.cv){
   load("../output/GBMModifiedFeature.RData")
   #pdf("../fig/cv_results.pdf", width=7, height=5)
-  plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-       main="Cross Validation Error", type="n", ylim=c(0, 0.25))
-  points(model_values, err_cv[,1], col="blue", pch=16)
-  lines(model_values, err_cv[,1], col="blue")
-  arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
-        length=0.1, angle=90, code=3)
+  #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+   #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
+  #points(model_values, err_cv[,1], col="blue", pch=16)
+  #lines(model_values, err_cv[,1], col="blue")
+  #arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
+   #     length=0.1, angle=90, code=3)
   #dev.off()
 }
 ```
 
 * Choose the "best"" parameter value
 ```{r best_model}
-model_best=model_values[1]
+#model_best=model_values[1]
 if(run.cv){
-  model_best <- model_values[which.min(err_cv[,1])]
+  #model_best <- model_values[which.min(err_cv[,1])]
 }
 
-par_best <- list(depth=model_best)
+#par_best <- list(depth=model_best)
 ```
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
-tm_train=NA
-tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-save(fit_train, file="../output/fit_train.RData")
+#tm_train=NA
+#tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
+#save(fit_train, file="../output/fit_train.RData")
 ```
 
 ####For Improved model RandomForest
@@ -196,12 +204,12 @@ save(fit_train, file="../output/fit_train.RData")
 source("../lib/cross_validation.R")
 
 if(run.cv){
-  err_cv <- array(dim=c(length(model_values), 2))
-  for(k in 1:length(model_values)){
-    cat("k=", k, "\n")
-    err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
-  }
-  save(err_cv, file="../output/err_cv.RData")
+  #err_cv <- array(dim=c(length(model_values), 2))
+  #for(k in 1:length(model_values)){
+   # cat("k=", k, "\n")
+    #err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
+  #}
+  #save(err_cv, file="../output/err_cv.RData")
 }
 ```
 
@@ -211,12 +219,12 @@ Visualize cross-validation results.
 if(run.cv){
   load("../output/RFModifiedFeature.RData")
   #pdf("../fig/cv_results.pdf", width=7, height=5)
-  plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-       main="Cross Validation Error", type="n", ylim=c(0, 0.25))
-  points(model_values, err_cv[,1], col="blue", pch=16)
-  lines(model_values, err_cv[,1], col="blue")
-  arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
-        length=0.1, angle=90, code=3)
+  #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+   #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
+  #points(model_values, err_cv[,1], col="blue", pch=16)
+  #lines(model_values, err_cv[,1], col="blue")
+  #arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
+    #    length=0.1, angle=90, code=3)
   #dev.off()
 }
 ```
@@ -225,17 +233,17 @@ if(run.cv){
 ```{r best_model}
 model_best=model_values[1]
 if(run.cv){
-  model_best <- model_values[which.min(err_cv[,1])]
+  #model_best <- model_values[which.min(err_cv[,1])]
 }
 
-par_best <- list(depth=model_best)
+#par_best <- list(depth=model_best)
 ```
 
 * Train the model with the entire training set using the selected model (model parameter) via cross-validation.
 ```{r final_train}
-tm_train=NA
-tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-save(fit_train, file="../output/fit_train.RData")
+#tm_train=NA
+#tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
+#save(fit_train, file="../output/fit_train.RData")
 ```
 
 ### Step 5: Make prediction 
@@ -244,10 +252,10 @@ save(fit_train, file="../output/fit_train.RData")
 ```{r test}
 tm_test=NA
 if(run.test){
-  load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
-  load(file="../output/fit_train.RData")
-  tm_test <- system.time(pred_test <- test(fit_train, dat_test))
-  save(pred_test, file="../output/pred_test.RData")
+  #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
+  #load(file="../output/fit_train.RData")
+  #tm_test <- system.time(pred_test <- test(fit_train, dat_test))
+  #save(pred_test, file="../output/pred_test.RData")
 }
 ```
 
@@ -255,10 +263,10 @@ if(run.test){
 ```{r test}
 tm_test=NA
 if(run.test){
-  load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
-  load(file="../output/fit_train.RData")
-  tm_test <- system.time(pred_test <- test(fit_train, dat_test))
-  save(pred_test, file="../output/pred_test.RData")
+  #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
+  #load(file="../output/fit_train.RData")
+  #tm_test <- system.time(pred_test <- test(fit_train, dat_test))
+  #save(pred_test, file="../output/pred_test.RData")
 }
 ```
 
