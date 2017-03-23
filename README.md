@@ -17,7 +17,7 @@ Term: Spring 2017
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
 
-Xuanyu Xiao(UNI:xx2243):Using PCA to select features; Develop k-NN and ANN models in R and k-NN model in python; Testing both origin dataset and improved dataset using k-NN and ANN
+Xuanyu Xiao(UNI:xx2243):Using PCA to select features according to AUC score; Develop k-NN and ANN models in R and k-NN model in python; Testing both original dataset and improved dataset using k-NN and ANN
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
