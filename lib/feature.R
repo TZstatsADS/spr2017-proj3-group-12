@@ -22,6 +22,8 @@ feature <- function(img_dir="../data/test_data/raw_images") {
   ##### CURRENT STATUS (2016/03/18 19:30):
   ##### This function constructs only grayscale features.
   
+  t = proc.time()
+  
   n_files <- length(list.files(img_dir))
   file_names <- list.files(img_dir, pattern = "[[:digit:]].jpg")
   file_names <- sort(file_names)
@@ -80,6 +82,9 @@ feature <- function(img_dir="../data/test_data/raw_images") {
   
   #Write the feature as a csv file into the path
   write.csv(sift.simp.gray, file = "../data/sift_gray_all.csv", row.names = FALSE)
+  
+  feature_time = (proc.time() - t)[3]
+  cat("Elapsed training time for featurizer is ", feature_time, " seconds \n")
   
   return(sift.simp.gray)
 }
