@@ -27,7 +27,7 @@ Term: Spring 2017
  
  + Xuanyu Xiao (UNI:xx2243):Using PCA to select features according to AUC score; Develop k-NN and ANN models in R and k-NN model in python; Testing both original dataset and improved dataset using k-NN and ANN;
  
- + Boxuan Zhao (UNI:bz2290): Developed both SVM linear and non linear models, tune the model parameters to find the best parameters for both orginal sift feature as well as enhanced sift feature and gray feature. Developed enhanced sift features, and particpate in various function modefications to make the project run more smoothly.
+ + Boxuan Zhao (UNI:bz2290): Developed both SVM linear and non linear models, tune the model parameters to find the best parameters for both orginal sift feature as well as enhanced sift feature and gray feature. Developed enhanced sift features, explored adaboost with decision stump to extract features and particpate in various function modifications to help the project run smoothly.
  
  + Boya Zhao (UNI:bz2294):
  
