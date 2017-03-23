@@ -53,7 +53,7 @@ In this chunk, ,we have a set of controls for the evaluation experiments.
 ```{r exp_setup}
 run.cv=TRUE # run cross-validation on the training set
 K <- 5  # number of CV folds
-run.feature=TRUE # process features for all pictures
+run.feature.train=TRUE # process features for all pictures
 run.test=TRUE # run evaluation on an independent test set
 #run.feature.test=TRUE # process features for test set
 ```
@@ -83,7 +83,7 @@ For this simple example, we use the row averages of raw pixel values as the visu
 source("../lib/feature.R")
 
 tm_feature_train <- NA
-if(run.feature){
+if(run.feature.train){
   tm_feature_train <- system.time(dat_train <- feature(img_train_dir, 
                                                        "train", 
                                                        data_name="zip", 
