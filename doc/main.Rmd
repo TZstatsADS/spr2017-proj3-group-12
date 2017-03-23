@@ -28,8 +28,8 @@ library("EBImage")
 ### Step 0: specify directories.
 
 ```{r wkdir, eval=FALSE}
-#setwd("./ads_spr2017_proj3/lib")
-setwd("./spr2017-proj3-group-12/lib")
+setwd("./ads_spr2017_proj3/lib")
+#setwd("./spr2017-proj3-group-12/lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
@@ -162,7 +162,7 @@ if(run.cv){
 Visualize cross-validation results. 
 ```{r cv_vis}
 if(run.cv){
-  load("../output/err_cv.RData")
+  load("../output/GBMModifiedFeature.RData")
   #pdf("../fig/cv_results.pdf", width=7, height=5)
   plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
        main="Cross Validation Error", type="n", ylim=c(0, 0.25))
@@ -209,7 +209,7 @@ if(run.cv){
 Visualize cross-validation results. 
 ```{r cv_vis}
 if(run.cv){
-  load("../output/err_cv.RData")
+  load("../output/RFModifiedFeature.RData")
   #pdf("../fig/cv_results.pdf", width=7, height=5)
   plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
        main="Cross Validation Error", type="n", ylim=c(0, 0.25))
