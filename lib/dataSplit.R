@@ -11,8 +11,7 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   #Note: Non-useful ouputs are all muted to save time
   source("../lib/feature.R")
   library("EBImage")#Rememner to run this package before you do anything!!!!!!!!!
-  if(!test)
-  {
+  
     sift.ori = read.csv("../data/train_data/sift_features.csv")
   
     gray_feature <- feature.gray()
@@ -21,17 +20,6 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   
     gray = read.csv("../data/train_data/gray.csv")
   
-  }
-  else if(test)
-  {
-    sift.ori = read.csv("../data/test_data/sift_features.csv")
-    
-    gray_feature <- feature.gray("../data/test_data/raw_images")
-    
-    write.csv(gray_feature, file = "../data/test_data/gray.csv")
-    
-    gray = read.csv("../data/test_data/gray.csv")
-  }
   
   #image_features_new = read.csv("../data/sift.feature.New.csv")
   sift.simp = feature.new(sift.ori)
@@ -69,8 +57,8 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   #write.csv(sift.simp[,-test_rows], file = "../data/sift_simp_train.csv", row.names = FALSE)
   #write.csv(sift.simp[,test_rows], file = "../data/sift_simp_test.csv", row.names = FALSE)
  
-  if(!test) 
-  {#Output simplified sift features with gray features into test and train set
+  
+  #Output simplified sift features with gray features into test and train set
   write.csv(sift.simp.gray[,-test_rows], file = "../data/train_data/sift_simp_gray_train.csv", row.names = FALSE)
   write.csv(sift.simp.gray[,test_rows], file = "../data/train_data/sift_simp_gray_test.csv", row.names = FALSE)
   
@@ -80,14 +68,27 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   
   #output class labels in to test and train set
   write.csv(labels[-test_rows,], file = "../data/train_data/labels_train.csv", row.names = FALSE)
-  write.csv(labels[test_rows,], file = "../data/train_data/labels_test.csv", row.names = FALSE)}
-  else if(test)
-  {
+  write.csv(labels[test_rows,], file = "../data/train_data/labels_test.csv", row.names = FALSE)
+  
     write.csv(sift.simp.gray, file = "../data/test_data/sift_simp_gray.csv", row.names = FALSE)
-    
-  }
-  
-  
+ 
 }
 
+dataSplit.cv = function(percentage = 0.25, dat)
+{
+  n = ncol(dat)
+  
+  labels = read.csv("../data/training_data/labels.csv")
+  
+  test_rows = sample(c(1:n), percentage*n, replace = FALSE)
+
+  #Output simplified sift features with gray features into test and train set
+  write.csv(dat[,-test_rows], file = "../data/training_data/sift_simp_gray_train.csv", row.names = FALSE)
+  write.csv(dat[,test_rows], file = "../data/training_data/sift_simp_gray_test.csv", row.names = FALSE)
+  
+  #output class labels in to test and train set
+  write.csv(labels[-test_rows,], file = "../data/training_data/labels_train.csv", row.names = FALSE)
+  write.csv(labels[test_rows,], file = "../data/training_data/labels_test.csv", row.names = FALSE)
+  
+}
 

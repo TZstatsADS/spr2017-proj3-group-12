@@ -30,6 +30,7 @@ feature.gray <- function(img_dir="../data/test_data/raw_images") {
         },
         error = function(c) "invalid or corrupt JPEG file")
     }
+    
     return(gray_feature)
 }
 
