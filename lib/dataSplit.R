@@ -6,7 +6,7 @@
 ### Project 3
 ### ADS spring 2017
 
-dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the new test data provided in class(Default : No)
+dataSplit = function(percentage = 0.25)#Test indicate do we run on the new test data provided in class(Default : No)
 {
   #Note: Non-useful ouputs are all muted to save time
   source("../lib/feature.R")
@@ -41,8 +41,7 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   #Original Sift features with gray features
   sift.ori.gray = rbind(sift.ori,gray)
   
-  if(!test)
-  {labels = read.csv("../data/train_data/labels.csv")}
+  labels = read.csv("../data/train_data/labels.csv")
   
   n = ncol(sift.ori)
   
@@ -70,7 +69,7 @@ dataSplit = function(percentage = 0.25, test = F)#Test indicate do we run on the
   write.csv(labels[-test_rows,], file = "../data/train_data/labels_train.csv", row.names = FALSE)
   write.csv(labels[test_rows,], file = "../data/train_data/labels_test.csv", row.names = FALSE)
   
-    write.csv(sift.simp.gray, file = "../data/test_data/sift_simp_gray.csv", row.names = FALSE)
+  write.csv(sift.simp.gray, file = "../data/test_data/sift_simp_gray.csv", row.names = FALSE)
  
 }
 
