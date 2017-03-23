@@ -17,6 +17,7 @@ Term: Spring 2017
 
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
+
         + Vikas Arun (UNI:va2298)
 	+ Xuanyu Xiao (UNI:xx2243):Using PCA to select features according to AUC score; Develop k-NN and ANN models in R and k-NN 
 	                           model in python; Testing both original dataset and improved dataset using k-NN and ANN;
