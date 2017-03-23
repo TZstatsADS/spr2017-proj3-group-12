@@ -15,7 +15,7 @@ ExploreGBM = function(feature_filename, labels_filename, K = 5)
   tune_gbm = train(image_features, as.factor(image_labels), method = "gbm", tuneGrid = parameters, trControl = fitControl)
   #Best Model has shrinkage .1, ntrees = 1000
   
-  Plotting results of cross validation
+  #Plotting results of cross validation
   #jpeg("../figs/GBMAccuracypnFullData.jpeg")
   #plot(tune_gbm$results$shrinkage[7:9], tune_gbm$results$Accuracy[7:9], type = "b", col = "red", lty = 2, xlab = "shrinkage", ylab = "accuracy", main = "Accuracy vs. Shrinkage", ylim = c(0.65,0.78), pch = 1)
   #points(tune_gbm$results$shrinkage[4:6], tune_gbm$results$Accuracy[4:6], type = "b", col = "blue", lty = 2, pch = 2)

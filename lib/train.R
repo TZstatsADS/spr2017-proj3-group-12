@@ -6,10 +6,10 @@
 ### Project 3
 ### ADS Spring 2016
 
-source("GBM.R")
-source("RandomForest.R")
+source("../lib/GBM.R")
+source("../lib/RandomForest.R")
 
-train = function(feature_filename, labels_filename, full_feature = FALSE, run_cv = FALSE, run_OOB = FALSE, K = 5)
+train_models = function(feature_filename, labels_filename, full_feature = FALSE, run_cv = FALSE, run_OOB = FALSE, K = 5)
 {
   if(run_cv == TRUE)
   {

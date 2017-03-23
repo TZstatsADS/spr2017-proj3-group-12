@@ -8,7 +8,7 @@ output:
 ---
 Revlevant packages needed for this file
 
-```{r}
+```{r "package import", message = FALSE, warnings = FALSE}
 list.of.packages <- c("e1071", "ggplot2","gbm","caret","randomForest","EBImage")
 
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -28,13 +28,13 @@ library("EBImage")
 
 ### Step 0: specify directories.
 
-```{r wkdir, eval=FALSE}
-#setwd("./ads_spr2017_proj3/lib")
-setwd("../spr2017-proj3-group-12/lib")
+This directory should be set to the lib folder of the cloned repository
+```{r "setup"", eval=FALSE}
+knitr::opts_knit$set(root.dir = "C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
-Provide directories for raw images. Training set and test set should be in different subfolders. 
+Providing directories for images, sift features, and labels. Providing paths for ouputted models and predictions. 
 ```{r}
 #image_test_dir <- "../data/test_data/raw_images" # This will be modified for different data sets.
 #image_train_dir <- "../data/train_data/raw_images"
@@ -79,26 +79,18 @@ run.test=TRUE # run evaluation on an independent test set
 #run.feature.test=TRUE # process features for test set
 ```
 
-Using cross-validation or independent test set evaluation, we compare the performance of different classifiers or classifiers with different specifications. In this example, we use GBM with different `depth`. In the following chunk, we list, in a vector, setups (in this case, `depth`) corresponding to models that we will compare. In your project, you maybe comparing very different classifiers. You can assign them numerical IDs and labels specific to your project. 
+Using cross-validation or independent test set evaluation, we compare the performance of different classifiers or classifiers with different specifications. For the GBM model, shrinkage values of .001, .01, and .1 are evaluted, as well as a size limit of 100, 500, and 1000 trees. For the Random Forest model, a size limit of 100, 500, and 1000 trees is evaluted using the Out of Bag (OOB) error estimate, which is similar to cross validation.
 
-```{r model_setup, eval=FALSE, include=FALSE}
-#model_values <- seq(3, 11, 2)
-#model_labels = paste("GBM with depth =", model_values)
-```
 
-### Step 2: import training images class labels.
+### Step 2: construct visual feature for Full images
 
-Class "0" for fried chicken and Class "1" for dogs
+Features are created by doing two things. 
+*First, the number of provided sift features is reduced. Sift feature with standard deviation in the lowest 25th percentile are thrown out. Additionaly for each feature, the mean value for "chicken" images is subtracted from the mean value for "poodle" images. Features, with the absolute value of differences  less than the median are discarded.
+*Second, grayscale features are added. For each image, a frequency histogram is created, representing the percentage of pixels falling in each of 256 gray scale bins. As such, each image has 256 grayscale features added.
 
-```{r train_label}
-label_train <- c(rep(0,1000),rep(1,1000))
-```
+The data is also split into training and testing data in a 75/25 split. 
 
-### Step 3: construct visual feature for Full images
-
-`feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
-
-```{r feature}
+```{r feature, message = FALSE warnings = FALSE}
 source("../lib/feature.R")
 source("../lib/DataSplit.R")
 
@@ -140,112 +132,64 @@ dataSplit.cv()
 #}
 
 #write(dat_all,file="../output/feature_all.csv")
-save(dat_all, file="../output/feature_all.RData")
 #save(dat_train, file="./output/feature_train.RData")
 
 #save(dat_test, file="./output/feature_test.RData")
 ```
 
-### Step 4: Train a classification model with training images
-Call the train model and test model from library. 
-
-`train.R` and `test.R` should be wrappers for all your model training steps and your classification/prediction steps. 
-+ `train.R`
-  + Input: a path that points to the training set features.
-  + Input: an R object of training sample labels.
-  + Output: an RData file that contains trained classifiers in the forms of R objects: models/settings/links to external trained configurations.
-+ `test.R`
-  + Input: a path that points to the test set features.
-  + Input: an R object that contains a trained classifiers.
-  + Output: an R object of class label predictions on the test set. If there are multiple classifiers under evaluation, there should be multiple sets of label predictions. 
+### Step 4: Model Training and Parameter Selection
+Training the GBM model and Random Forest model on the original features and the new features. Outputed models are stored in RData files in the output folder. Cross validation and OOB parameter estimates are done if requested. 
+ 
 ```{r loadlib}
 source("../lib/train.R")
 source("../lib/test.R")
-source("../lib/GBM.R")
-source("../lib/RandomForest.R")
-#Constructing training and testing files(Stored under DataSplit.R)
-#dataSplit.cv(percentage = 0.25, dat.all)
 ```
 
-#### Model Training for GBM and Random Forest (with optional CV/OOB parameter selection)
+```{r runcv, warning=FALSE}
 
-Training models on both the original features and the modified fatures
-```{r runcv, message=FALSE, warning=FALSE}
-#source("../lib/cross_validation.R")
-
-train(original_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
-train(modified_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
+train_models(original_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
+train_models(modified_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
 
 ```
 
 ####GBM Cross Validation Results
-Visualize cross-validation results for GBM. 
-```{r cv_vis}
-if(run.cv){
-  ##### INSERT PHOTOS HERE
-  
+![Figure 1: GBM Cross Validation Results](../figs/GBMAccuracyFullData.jpeg)
 
-  #pdf("../fig/cv_results.pdf", width=7, height=5)
-  #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-   #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
-  #points(model_values, err_cv[,1], col="blue", pch=16)
-  #lines(model_values, err_cv[,1], col="blue")
-  #arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
-   #     length=0.1, angle=90, code=3)
-  #dev.off()
-}
-```
+As can be seen in the above figure, a shrinkage value of 0.1 appears to be the best choice regardless of the number of trees. At a shrinkage value of 0.1, the 500 tree and 1000 tree model have nearly identical errors. 
 
-* What is the best choice of parameters?
-```{r best_model}
-#model_best=model_values[1]
-if(run.cv){
-  #model_best <- model_values[which.min(err_cv[,1])]
-}
+*What is the best choice of parameters?*
+Though the 1000 tree model is slightly better than the 500 tree model when shrinkage is 0.1, the 500 tree model is chosen to avoid overfitting. Additionally, the 500 tree model trains quicker, predicts quicker, and is smaller to store, so given the scenario of creating a phone app, these considerations make the 500 tree model more appropriate.
 
-#par_best <- list(depth=model_best)
-```
 
 
 ####Random Forest OOB Results
+![Figure 2: Random Forest OOB error results](../figs/RandomForestOriginalFeatures.jpg)
 
-Visualize OOB error
-```{r cv_vis}
-if(run.OOB){
-  #PHOTOS HERE
-  
-  
-  #pdf("../fig/cv_results.pdf", width=7, height=5)
-  #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
-   #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
-  #points(model_values, err_cv[,1], col="blue", pch=16)
-  #lines(model_values, err_cv[,1], col="blue")
-  #arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
-    #    length=0.1, angle=90, code=3)
-  #dev.off()
-}
-```
+As expected, the above results show that, as the number of trees increases, the OOB error decreases at a very high rate until it eventually flat lines.
 
-* Choose the best number of trees
-```{r best_model}
-model_best=model_values[1]
-if(run.OOB){
-  #model_best <- model_values[which.min(err_cv[,1])]
-}
+*Choose the best number of trees*
+The best number of trees to chose is the least complex model that achieves the best error. The diagram above shows that the error from 500 onwards is fairly flat, and thus we chose to use a 500 tree model for our random forest.
 
-#par_best <- list(depth=model_best)
-```
 
 
 ### Step 5: Make predictions on test data
 
 #For original features
+Predictions are made by the GBM model and Random Forest model on the original SIFT feature set. These predictions are on the test set, which contain 25% of the original data (i.e. 500 points).
 ```{r test}
 tm_test=NA
 if(run.test){
 
   load(gbm_model_original_features)
   load(rf_model_original_features)
+  test(tune_gbm, image_rf, original_data_test, full_feature = FALSE)
+  rf_predict = unlist(read.csv(rf_model_original_predict))
+  gbm_predict = unlist(read.csv(gbm_model_original_predict))
+  test_labels = unlist(read.csv(labels_test))
+  rf_error = sum(rf_predict != test_labels)/length(test_labels)
+  gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
+  cat("GBM error for original features is ", gbm_error, "/n")
+  cat("Random Forest error for original features is, ", rf_error, "/n")
   
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
@@ -255,15 +199,16 @@ if(run.test){
 ```
 
 #For test feature
+Predictions are made by the GBM model and Random Forest model on the modified data set, which contains the small subset of SIFT features and additional grayscale features. These predictions are on the test set, which contain 25% of the original data (i.e. 500 points).
 ```{r test}
 tm_test=NA
 if(run.test){
   load(gbm_model_modified_features)
   load(rf_model_modified_features)
-  test(tune_gbm, image_rf, "../data/sift_simp_gray_test.csv", full_feature = FALSE)
-  rf_predict = read.csv("../output/RFModifiedPredictions.csv")
-  gbm_predict = read.csv("../output/GBMModifiedPredictions.csv")
-  test_labels = unlist(read.csv("../data/labels_test/csv"))
+  test(tune_gbm, image_rf, modified_data_test, full_feature = FALSE)
+  rf_predict = unlist(read.csv(rf_model_modified_predict))
+  gbm_predict = unlist(read.csv(gbm_model_modified_predict))
+  test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
   cat("GBM error for modified features is ", gbm_error, "/n")
@@ -277,11 +222,8 @@ if(run.test){
 ```
 
 ### Summarize Performance of various models
-Prediction performance matters, do does the running times for constructing features and for training the model, especially when the computation resource is limited. 
-```{r running_time}
-cat("Time for constructing all features=", tm_feature[1], "s \n")
-#cat("Time for constructing training features=", tm_feature_train[1], "s \n")
-#cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
-cat("Time for training model=", tm_train[1], "s \n")
-cat("Time for making prediction=", tm_test[1], "s \n")
-```
+While prediction performance matters, so does the running times for constructing features and testing model, given the scenario limiations of the phone app. We assume training time is not an important factor as training can be done offline on a powerful machine.
+
+![Figure 3: Running Time, Error, and Storage Space of Various Models](../figs/ErrorRates.JPG)
+
+The figure above shows the results from training and testing three different feature combinations: 1) The original SIFT data 2) The smaller subset of SIFT data 3) The smaller subset of SIFT Data combined with grayscale data. First focus on the error portion of the gray collumn, which represents training error. One will notice that adding grayscale feature significantly reduced error from ~20% to ~1%. This means, despite removing RGB features, color was still a very important indicator to distinguish between poodles and fried chicken. It is noteable that Linear SVM performs significantly worse than GBM and Random Forest on the third set of features. It is also important to look at the storage size of the blue collumns. This indicates the size required to store the trained model. One will notice than Random Forest takes significantly less space to store than GBM. As such, we chose Random Forest on the third feature set as our model due to its combination of accuracy, small storage size, and quick predicting time.
