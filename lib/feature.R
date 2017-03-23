@@ -130,24 +130,26 @@ dataSplit = function(dir, percentage = 0.25, export = F)
   #Simplified Sift Features with gray features
   sift.simp.gray = rbind(sift.simp,gray_feature)
   
-  #Original Sift features with gray features
-  #sift.ori.gray = rbind(sift.ori,gray)
-  
   labels = read.csv(paste(dir,"labels.csv",sep=""))
   n = ncol(sift.ori)
+  
   test_rows = sample(c(1:n), percentage*n, replace = FALSE)
-  #test_rows = 1
+  
   tm_train = system.time({
+  
   sift.simp.gray.train = sift.simp.gray[,-test_rows]})
   tm_test = system.time({
   sift.simp.gray.test = sift.simp.gray[,test_rows]})
+  
   labels.train = labels[-test_rows,]
+  
   labels.test = labels[test_rows,]
+  
   write.csv(sift.simp.gray.train, file = paste(dir,"sift_simp_gray_train.csv",sep=""), row.names = FALSE)
   write.csv(sift.simp.gray.test, file = paste(dir,"sift_simp_gray_test.csv",sep=""), row.names = FALSE)
   write.csv(labels.train, file = paste(dir,"labels_train.csv",sep=""), row.names = FALSE)
   write.csv(labels.test, file = paste(dir,"labels_test.csv",sep=""), row.names = FALSE)
     
-    return(list(tm_train,tm_test))
+  return(list(train=tm_train,test=tm_test))
 }
 
