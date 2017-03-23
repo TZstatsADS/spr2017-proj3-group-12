@@ -35,7 +35,7 @@ setwd("./ads_spr2017_proj3/lib")
 Provide directories for raw images. Training set and test set should be in different subfolders. 
 ```{r}
 image_test_dir <- "../data/test_data/raw_images" # This will be modified for different data sets.
-image_dir <- "../data/train_data/raw_images"
+image_train_dir <- "../data/train_data/raw_images"
 #img_train_dir <- paste(experiment_dir, "train/", sep="")
 #img_test_dir <- paste(experiment_dir, "test/", sep="")
 ```
@@ -84,10 +84,12 @@ source("../lib/feature.R")
 
 tm_feature_train <- NA
 if(run.feature.train){
-  tm_feature_train <- system.time(dat_train <- feature(img_train_dir, 
-                                                       "train", 
-                                                       data_name="zip", 
-                                                       export=TRUE))
+  tm_feature_train <- system.time({
+    dat_train <- feature(img_dir=image_train_dir)})
+                                    #feature(img_train_dir, 
+                                     #                  "train", 
+                                      #                 data_name="zip", 
+                                       #                export=TRUE))
 }
 
 #tm_feature_test <- NA
