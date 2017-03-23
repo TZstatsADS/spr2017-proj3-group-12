@@ -14,8 +14,6 @@ library(EBImage)
 setwd("~/Desktop/sem 2/Applied data science/spr2017-proj3-group-12/data")
 img_dir <- "~/Desktop/sem 2/Applied data science/Proj3/training_data/raw_images"
 
-n_files <- length(list.files(img_dir))
-
 feature <- function(img_dir) {
   
   ### Constructs features out of images for training/testing
@@ -25,6 +23,7 @@ feature <- function(img_dir) {
   ##### CURRENT STATUS (2016/03/18 19:30): 
   ##### This function constructs only grayscale features.
   
+  n_files <- length(list.files(img_dir))
   file_names <- list.files(img_dir, pattern = "[[:digit:]].jpg")
   file_names <- sort(file_names)
   file_paths <- rep(NA_character_, length(file_names))
