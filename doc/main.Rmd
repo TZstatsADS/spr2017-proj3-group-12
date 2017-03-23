@@ -28,7 +28,8 @@ library("EBImage")
 ### Step 0: specify directories.
 
 ```{r wkdir, eval=FALSE}
-setwd("./ads_spr2017_proj3/lib") 
+#setwd("./ads_spr2017_proj3/lib")
+setwd("./spr2017-proj3-group-12/lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
@@ -137,6 +138,7 @@ source("../lib/test.R")
 source("../lib/GBM.R")
 source("../lib/RandomForest.R")
 source("../lib/DataSplit.R")
+#Constructing training and testing files
 dataSplit.cv(percentage = 0.25, dat.all)
 ```
 
