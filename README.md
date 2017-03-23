@@ -16,6 +16,7 @@ Term: Spring 2017
 + Project summary: In this project, we created a classification engine for grayscale images of poodles versus images of fried chickens. 
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
+
 Xuanyu Xiao(UNI:xx2243):Using PCA to select features; Develop k-NN and ANN models in R and k-NN model in python; Testing both origin dataset and improved dataset using k-NN and ANN
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
