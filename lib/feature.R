@@ -76,9 +76,12 @@ feature <- function(img_dir="../data/training_data/raw_images") {
   #Construct New feature set
   
   #Simplified Sift Features with gray features
-  sift.simp.gray = rbind(sift.simp,gray_feature)
+  sift.simp.gray = as.matrix(rbind(sift.simp,gray_feature))
   
-  return(as.matrix(sift.simp.gray))
+  #Write the feature as a csv file into the path
+  write.csv(sift.simp.gray, file = "../data/sift_gray_all.csv", row.names = FALSE)
+  
+  return(sift.simp.gray)
 }
 
 
