@@ -34,10 +34,11 @@ setwd("./ads_spr2017_proj3/lib")
 
 Provide directories for raw images. Training set and test set should be in different subfolders. 
 ```{r}
-image_test_dir <- "../data/test_data/raw_images" # This will be modified for different data sets.
-image_train_dir <- "../data/train_data/raw_images"
+#image_test_dir <- "../data/test_data/raw_images" # This will be modified for different data sets.
+#image_train_dir <- "../data/train_data/raw_images"
 #img_train_dir <- paste(experiment_dir, "train/", sep="")
 #img_test_dir <- paste(experiment_dir, "test/", sep="")
+image_all.dir <- "../data/training_data/raw_images"
 ```
 
 ### Step 1: set up controls for evaluation experiments.
@@ -73,24 +74,35 @@ Class "0" for fired chicken and Class "1" for dogs
 label_train <- c(rep(0,1000),rep(1,1000))
 ```
 
-### Step 3: construct visual feature
-
-For this simple example, we use the row averages of raw pixel values as the visual features. Note that this strategy **only** works for images with the same number of rows. For some other image datasets, the feature function should be able to handle heterogeneous input images. Save the constructed features to the output subfolder.
+### Step 3: construct visual feature for Full images
 
 `feature.R` should be the wrapper for all your feature engineering functions and options. The function `feature( )` should have options that correspond to different scenarios for your project and produces an R object that contains features that are required by all the models you are going to evaluate later. 
 
 ```{r feature}
 source("../lib/feature.R")
 
-tm_feature_train <- NA
+tm_feature <- NA
 if(run.feature.train){
-  tm_feature_train <- system.time({
-    dat_train <- feature(img_dir=image_train_dir)})
+  tm_feature <- system.time({
+    dat_all <- feature(img_dir=image_all.dir)})
                                     #feature(img_train_dir, 
                                      #                  "train", 
                                       #                 data_name="zip", 
                                        #                export=TRUE))
 }
+
+#tm_feature_train <- NA
+#if(run.feature.train){
+ # tm_feature_train <- system.time({
+  #  dat_train <- feature(img_dir=image_train_dir)})
+                                    #feature(img_train_dir, 
+                                     #                  "train", 
+                                      #                 data_name="zip", 
+                                       #                export=TRUE))
+#}
+
+
+
 
 #tm_feature_test <- NA
 #if(run.feature.test){
@@ -100,7 +112,10 @@ if(run.feature.train){
     #                                                 export=TRUE))
 #}
 
-save(dat_train, file="./output/feature_train.RData")
+#write(dat_all,file="../output/feature_all.csv")
+save(dat_all, file="../output/feature_all.RData")
+#save(dat_train, file="./output/feature_train.RData")
+
 #save(dat_test, file="./output/feature_test.RData")
 ```
 
@@ -119,10 +134,15 @@ Call the train model and test model from library.
 ```{r loadlib}
 source("../lib/train.R")
 source("../lib/test.R")
+source("../lib/GBM.R")
+source("../lib/RandomForest.R")
+source("../lib/DataSplit.R")
+dataSplit.cv(percentage = 0.25, dat.all)
 ```
 
 #### Model selection with cross-validation
-* Do model selection by choosing among different values of training model parameters, that is, the interaction depth for GBM in this example. 
+
+####For Baseline model GBM
 ```{r runcv, message=FALSE, warning=FALSE}
 source("../lib/cross_validation.R")
 
@@ -136,8 +156,8 @@ if(run.cv){
 }
 ```
 
-Visualize cross-validation results. 
 
+Visualize cross-validation results. 
 ```{r cv_vis}
 if(run.cv){
   load("../output/err_cv.RData")
@@ -152,6 +172,52 @@ if(run.cv){
 }
 ```
 
+* Choose the "best"" parameter value
+```{r best_model}
+model_best=model_values[1]
+if(run.cv){
+  model_best <- model_values[which.min(err_cv[,1])]
+}
+
+par_best <- list(depth=model_best)
+```
+
+* Train the model with the entire training set using the selected model (model parameter) via cross-validation.
+```{r final_train}
+tm_train=NA
+tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
+save(fit_train, file="../output/fit_train.RData")
+```
+
+####For Improved model RandomForest
+```{r runcv, message=FALSE, warning=FALSE}
+source("../lib/cross_validation.R")
+
+if(run.cv){
+  err_cv <- array(dim=c(length(model_values), 2))
+  for(k in 1:length(model_values)){
+    cat("k=", k, "\n")
+    err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
+  }
+  save(err_cv, file="../output/err_cv.RData")
+}
+```
+
+
+Visualize cross-validation results. 
+```{r cv_vis}
+if(run.cv){
+  load("../output/err_cv.RData")
+  #pdf("../fig/cv_results.pdf", width=7, height=5)
+  plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
+       main="Cross Validation Error", type="n", ylim=c(0, 0.25))
+  points(model_values, err_cv[,1], col="blue", pch=16)
+  lines(model_values, err_cv[,1], col="blue")
+  arrows(model_values, err_cv[,1]-err_cv[,2], model_values, err_cv[,1]+err_cv[,2], 
+        length=0.1, angle=90, code=3)
+  #dev.off()
+}
+```
 
 * Choose the "best"" parameter value
 ```{r best_model}
@@ -171,7 +237,19 @@ save(fit_train, file="../output/fit_train.RData")
 ```
 
 ### Step 5: Make prediction 
-Feed the final training model with the completely holdout testing data. 
+
+#For Baseline Model GBM
+```{r test}
+tm_test=NA
+if(run.test){
+  load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
+  load(file="../output/fit_train.RData")
+  tm_test <- system.time(pred_test <- test(fit_train, dat_test))
+  save(pred_test, file="../output/pred_test.RData")
+}
+```
+
+#For Improved Model RandomForest
 ```{r test}
 tm_test=NA
 if(run.test){
@@ -185,8 +263,9 @@ if(run.test){
 ### Summarize Running Time
 Prediction performance matters, do does the running times for constructing features and for training the model, especially when the computation resource is limited. 
 ```{r running_time}
-cat("Time for constructing training features=", tm_feature_train[1], "s \n")
-cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
+cat("Time for constructing all features=", tm_feature[1], "s \n")
+#cat("Time for constructing training features=", tm_feature_train[1], "s \n")
+#cat("Time for constructing testing features=", tm_feature_test[1], "s \n")
 cat("Time for training model=", tm_train[1], "s \n")
 cat("Time for making prediction=", tm_test[1], "s \n")
 ```

@@ -78,7 +78,7 @@ feature <- function(img_dir="../data/training_data/raw_images") {
   #Simplified Sift Features with gray features
   sift.simp.gray = rbind(sift.simp,gray_feature)
   
-  return(sift.simp.gray)#Return a list here
+  return(as.matrix(sift.simp.gray))
 }
 
 
