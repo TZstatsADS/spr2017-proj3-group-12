@@ -11,10 +11,12 @@ RandomForestExploration = function()
   image_rf = randomForest(x = image_features, y = as.factor(image_labels), ntree = 1500)
   best_ntree = which.min(image_rf$err.rate[,"OOB"])
   err_rate = c(image_rf$err.rate[100, "OOB"], image_rf$err.rate[500, "OOB"], image_rf$err.rate[1000, "OOB"], image_rf$err.rate[1500, "OOB"])
-  names(err_rate) = c("100", "500", "1000", "1500")
-  jpeg(filename = "../figs/RandomForestErrorOriginalFeatures.jpg")
-  plot(x = c(1:1500), y = image_rf$err.rate[,"OOB"], main = "Validation Error for Random Forest", xlab = "Number of Trees", ylab = "Validation Error")
-  dev.off()
+  
+  #Plotting the results of the OOB estimate
+  #names(err_rate) = c("100", "500", "1000", "1500")
+  #jpeg(filename = "../figs/RandomForestErrorOriginalFeatures.jpg")
+  #plot(x = c(1:1500), y = image_rf$err.rate[,"OOB"], main = "Validation Error for Random Forest", xlab = "Number of Trees", ylab = "Validation Error")
+  #dev.off()
 }
 
 trainRandomForest = function(feature_filename, labels_filename, full_feature = FALSE)

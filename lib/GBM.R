@@ -6,30 +6,31 @@
 library("gbm")
 library("caret")
 
-ExploreGBM = function(feature_filename, labels_filename)
+ExploreGBM = function(feature_filename, labels_filename, K = 5)
 {
   image_features = t(read.csv("../data/sift_features.csv"))
   image_labels = unlist(read.csv("../data/labels.csv"))
   parameters = expand.grid(interaction.depth = 1, n.trees = c(100, 500, 1000), shrinkage = c(.001, .01, .1), n.minobsinnode = 10)
-  fitControl = trainControl(method = "repeatedcv", number = 5, repeats = 1)
+  fitControl = trainControl(method = "repeatedcv", number = K, repeats = 1)
   tune_gbm = train(image_features, as.factor(image_labels), method = "gbm", tuneGrid = parameters, trControl = fitControl)
   #Best Model has shrinkage .1, ntrees = 1000
-  jpeg("../figs/GBMAccuracypnFullData.jpeg")
-  plot(tune_gbm$results$shrinkage[7:9], tune_gbm$results$Accuracy[7:9], type = "b", col = "red", lty = 2, xlab = "shrinkage", ylab = "accuracy", main = "Accuracy vs. Shrinkage", ylim = c(0.65,0.78), pch = 1)
-  points(tune_gbm$results$shrinkage[4:6], tune_gbm$results$Accuracy[4:6], type = "b", col = "blue", lty = 2, pch = 2)
-  points(tune_gbm$results$shrinkage[1:3], tune_gbm$results$Accuracy[1:3], type = "b", col = "purple", lty = 2, pch = 3)
-  legend("topleft", c("1000", "500s", "100"), col = c("red","blue","purple"), pch = c(1,2,3), title = "Num. Stumps")
-  dev.off()
+  
+  Plotting results of cross validation
+  #jpeg("../figs/GBMAccuracypnFullData.jpeg")
+  #plot(tune_gbm$results$shrinkage[7:9], tune_gbm$results$Accuracy[7:9], type = "b", col = "red", lty = 2, xlab = "shrinkage", ylab = "accuracy", main = "Accuracy vs. Shrinkage", ylim = c(0.65,0.78), pch = 1)
+  #points(tune_gbm$results$shrinkage[4:6], tune_gbm$results$Accuracy[4:6], type = "b", col = "blue", lty = 2, pch = 2)
+  #points(tune_gbm$results$shrinkage[1:3], tune_gbm$results$Accuracy[1:3], type = "b", col = "purple", lty = 2, pch = 3)
+  #legend("topleft", c("1000", "500s", "100"), col = c("red","blue","purple"), pch = c(1,2,3), title = "Num. Stumps")
+  #dev.off()
   
 }
 
-TrainGBM = function(feature_filename,labels_filename, param_trees = 500, full_feature = FALSE)
+TrainGBM = function(feature_filename,labels_filename, param_trees = 500, param_shrinkage = 0.1, full_feature = FALSE)
 {
   #Using optimal features for training set as computed by ExploreGBM
   t = proc.time()
   image_features = t(read.csv(feature_filename))
   image_labels = unlist(read.csv(labels_filename))
-  param_shrinkage = 0.1
   parameters = expand.grid(interaction.depth = 1, n.trees = param_trees, shrinkage = param_shrinkage, n.minobsinnode = 10)
   fitControl = trainControl(method = "repeatedcv", number = 5, repeats = 1)
   tune_gbm = train(image_features, as.factor(image_labels), method = "gbm", tuneGrid = parameters, trControl = fitControl)

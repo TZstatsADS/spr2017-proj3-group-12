@@ -41,21 +41,39 @@ Provide directories for raw images. Training set and test set should be in diffe
 #img_train_dir <- paste(experiment_dir, "train/", sep="")
 #img_test_dir <- paste(experiment_dir, "test/", sep="")
 image_all.dir <- "../data/training_data/raw_images"
+original_data_train = "../data/sift_ori_train.csv"
+original_data_test = "../data/sift_ori_test.csv"
+modified_data_train = "../data/sift_simp_gray_train.csv"
+modified_data_test = "../data/sift_simp_gray_test.csv"
+labels_train = "../data/labels_train.csv"
+labels_test = "../data/labels_test.csv"
+
+gbm_model_original_features = "../output/GBMFullFeature.RData"
+rf_model_original_features = "../output/RFFullFeature.RData"
+gbm_model_modified_features = "../output/GBMModifiedFeature.RData"
+rf_model_modified_features = "../output/RFModifiedFeature.RData"
+
+gbm_model_original_predict = "../output/GBMFullFeaturePredictions.csv"
+rf_model_original_predict = "../output/RFFullFeature.RData"
+gbm_model_modified_predict = "../output/GBMModifiedPredictions.csv"
+rf_model_modified_predict = "../output/RFModifiedFeature.RData"
 ```
 
 ### Step 1: set up controls for evaluation experiments.
 
 In this chunk, ,we have a set of controls for the evaluation experiments. 
 
-+ (T/F) cross-validation on the training set
++ (T/F) cross-validation on the training set for GBM
 + (number) K, the number of CV folds
++ (T/F) Out of Bag Estimate (similar to cross-validation) on training set for Random Forest
 + (T/F) process features for training set
 + (T/F) run evaluation on an independent test set
-+ (T/F) run evaluation on an independent test set
+
 
 ```{r exp_setup}
-run.cv=TRUE # run cross-validation on the training set
+run.cv=FALSE # run cross-validation on the training set
 K <- 5  # number of CV folds
+run.OOB=FALSE
 run.feature.train=TRUE # process features for all pictures
 run.test=TRUE # run evaluation on an independent test set
 #run.feature.test=TRUE # process features for test set
@@ -70,7 +88,7 @@ Using cross-validation or independent test set evaluation, we compare the perfor
 
 ### Step 2: import training images class labels.
 
-Class "0" for fired chicken and Class "1" for dogs
+Class "0" for fried chicken and Class "1" for dogs
 
 ```{r train_label}
 label_train <- c(rep(0,1000),rep(1,1000))
@@ -149,28 +167,24 @@ source("../lib/RandomForest.R")
 #dataSplit.cv(percentage = 0.25, dat.all)
 ```
 
-#### Model selection with cross-validation
+#### Model Training for GBM and Random Forest (with optional CV/OOB parameter selection)
 
-####For Baseline model GBM
+Training models on both the original features and the modified fatures
 ```{r runcv, message=FALSE, warning=FALSE}
 #source("../lib/cross_validation.R")
 
-if(run.cv){
-  #err_cv <- array(dim=c(length(model_values), 2))
-  #for(k in 1:length(model_values)){
-    #cat("k=", k, "\n")
-    #err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
-  #}
-  train("../data/sift_ori_train.csv", "labels_train.csv", full_feature = TRUE)
-  #save(err_cv, file="../output/err_cv.RData")
-}
+train(original_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
+train(modified_data_train, labels_train, full_feature = TRUE, run_cv = run.cv, run_OOB = run.OOB, K = K)
+
 ```
 
-
-Visualize cross-validation results. 
+####GBM Cross Validation Results
+Visualize cross-validation results for GBM. 
 ```{r cv_vis}
 if(run.cv){
-  load("../output/GBMModifiedFeature.RData")
+  ##### INSERT PHOTOS HERE
+  
+
   #pdf("../fig/cv_results.pdf", width=7, height=5)
   #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
    #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
@@ -182,7 +196,7 @@ if(run.cv){
 }
 ```
 
-* Choose the "best"" parameter value
+* What is the best choice of parameters?
 ```{r best_model}
 #model_best=model_values[1]
 if(run.cv){
@@ -192,32 +206,15 @@ if(run.cv){
 #par_best <- list(depth=model_best)
 ```
 
-* Train the model with the entire training set using the selected model (model parameter) via cross-validation.
-```{r final_train}
-#tm_train=NA
-#tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-#save(fit_train, file="../output/fit_train.RData")
-```
 
-####For Improved model RandomForest
-```{r runcv, message=FALSE, warning=FALSE}
-source("../lib/cross_validation.R")
+####Random Forest OOB Results
 
-if(run.cv){
-  #err_cv <- array(dim=c(length(model_values), 2))
-  #for(k in 1:length(model_values)){
-   # cat("k=", k, "\n")
-    #err_cv[k,] <- cv.function(dat_train, label_train, model_values[k], K)
-  #}
-  #save(err_cv, file="../output/err_cv.RData")
-}
-```
-
-
-Visualize cross-validation results. 
+Visualize OOB error
 ```{r cv_vis}
-if(run.cv){
-  load("../output/RFModifiedFeature.RData")
+if(run.OOB){
+  #PHOTOS HERE
+  
+  
   #pdf("../fig/cv_results.pdf", width=7, height=5)
   #plot(model_values, err_cv[,1], xlab="Interaction Depth", ylab="CV Error",
    #    main="Cross Validation Error", type="n", ylim=c(0, 0.25))
@@ -229,35 +226,49 @@ if(run.cv){
 }
 ```
 
-* Choose the "best"" parameter value
+* Choose the best number of trees
 ```{r best_model}
 model_best=model_values[1]
-if(run.cv){
+if(run.OOB){
   #model_best <- model_values[which.min(err_cv[,1])]
 }
 
 #par_best <- list(depth=model_best)
 ```
 
-* Train the model with the entire training set using the selected model (model parameter) via cross-validation.
-```{r final_train}
-train("../data/sift_simp_gray_train.csv", "labels_train.csv", full_feature = FALSE)
-#tm_train=NA
-#tm_train <- system.time(fit_train <- train(dat_train, label_train, par_best))
-#save(fit_train, file="../output/fit_train.RData")
-```
 
-### Step 5: Make prediction 
+### Step 5: Make predictions on test data
 
-#For Baseline Model GBM
+#For original features
 ```{r test}
 tm_test=NA
 if(run.test){
-  load("../output/GBMModifiedFeature.Rdata")
-  load("../output/RFModifiedFeature.RData")
+
+  load(gbm_model_original_features)
+  load(rf_model_original_features)
+  
+  #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
+  #load(file="../output/fit_train.RData")
+  #tm_test <- system.time(pred_test <- test(fit_train, dat_test))
+  #save(pred_test, file="../output/pred_test.RData")
+}
+```
+
+#For test feature
+```{r test}
+tm_test=NA
+if(run.test){
+  load(gbm_model_modified_features)
+  load(rf_model_modified_features)
   test(tune_gbm, image_rf, "../data/sift_simp_gray_test.csv", full_feature = FALSE)
   rf_predict = read.csv("../output/RFModifiedPredictions.csv")
   gbm_predict = read.csv("../output/GBMModifiedPredictions.csv")
+  test_labels = unlist(read.csv("../data/labels_test/csv"))
+  rf_error = sum(rf_predict != test_labels)/length(test_labels)
+  gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
+  cat("GBM error for modified features is ", gbm_error, "/n")
+  cat("Random Forest error for modified features is, ", rf_error, "/n")
+  
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
   #tm_test <- system.time(pred_test <- test(fit_train, dat_test))
@@ -265,18 +276,7 @@ if(run.test){
 }
 ```
 
-#For Improved Model RandomForest
-```{r test}
-tm_test=NA
-if(run.test){
-  #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
-  #load(file="../output/fit_train.RData")
-  #tm_test <- system.time(pred_test <- test(fit_train, dat_test))
-  #save(pred_test, file="../output/pred_test.RData")
-}
-```
-
-### Summarize Running Time
+### Summarize Performance of various models
 Prediction performance matters, do does the running times for constructing features and for training the model, especially when the computation resource is limited. 
 ```{r running_time}
 cat("Time for constructing all features=", tm_feature[1], "s \n")
