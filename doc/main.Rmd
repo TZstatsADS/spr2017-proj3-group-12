@@ -1,9 +1,9 @@
 ---
-title: "Project 3 - Example Main Script"
+title: "Project 3 - Main Script"
 author: "Group 12: Vikas Arun, Xuanyu Xiao, Boxuan Zhao, Boya Zhao, Yuxi Zhou"
-date: "February 24, 2016"
-output:
-  pdf_document: default
+geometry: margin = 0.5in
+output: pdf_document
+
 ---
 Revlevant packages needed for this file
 
@@ -29,6 +29,7 @@ library("EBImage")
 This directory should be set to the lib folder of the cloned repository
 ```{r "setup"}
 knitr::opts_knit$set(root.dir = "../lib")
+knitr::opts_knit$set(width = 150)
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
@@ -88,7 +89,7 @@ Features are created by doing two things.
 
 The data is also split into training and testing data in a 75/25 split. 
 
-```{r "feature", warnings = FALSE}
+```{r "feature", message = FALSE, warnings = FALSE}
 source("../lib/feature.R")
 source("../lib/DataSplit.R")
 
@@ -186,8 +187,8 @@ if(run.test){
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
-  cat("GBM error for original features is ", gbm_error, "\n")
-  cat("Random Forest error for original features is ", rf_error, "\n")
+  cat("GBM error for original features is ", gbm_error, "/n")
+  cat("Random Forest error for original features is, ", rf_error, "/n")
   
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
@@ -209,8 +210,8 @@ if(run.test){
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
-  cat("GBM error for modified features is ", gbm_error, "\n")
-  cat("Random Forest error for modified features is, ", rf_error, "\n")
+  cat("GBM error for modified features is ", gbm_error, "/n")
+  cat("Random Forest error for modified features is, ", rf_error, "/n")
   
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
