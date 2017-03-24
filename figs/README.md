@@ -2,6 +2,4 @@
 
 ### Figs folder
 
-The figs directory contains the figures. This directory only contains generated files; that is, one should always be able to delete the contents and regenerate them.
-
-You can find figures recording relevant information from models that we have tired.
+The figs directory contains the figures. This directory only mostly generated files, except for ErrorRates.JPG and ErrorRates.xls. The figures here provide relevant analysis for the models that we tried.
