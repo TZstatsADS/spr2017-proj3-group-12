@@ -25,7 +25,7 @@ Term: Spring 2017
 
  + Vikas Arun (UNI:va2298): Developed GBM model and Random Forest models, including cross validation and OOB to find optimal parameters for sift features and enhanced sift and gray features. Explored pixel features on resized images. Wrote dataSplit.R to ensure proper separation of training and test set. Wrote train.R, test.R, and main.Rmd. Created powerpoint presentation for class. 
  
- + Xuanyu Xiao (UNI:xx2243):Using PCA to select features according to AUC score; Develop k-NN and ANN models in R and k-NN model in python; Testing both original dataset and improved dataset using k-NN and ANN;
+ + Xuanyu Xiao (UNI:xx2243):Used PCA to select features according to AUC score and saved rotation matrix for prediction; Develop k-NN and ANN models in R and k-NN model in python; Testing both original dataset and improved dataset using k-NN and ANN.
  
  + Boxuan Zhao (UNI:bz2290): Developed both SVM linear and non linear models, tune the model parameters to find the best parameters for both orginal sift feature as well as enhanced sift feature and gray feature. Developed enhanced sift features, explored adaboost with decision stump to extract features and particpate in various function modifications to help the project run smoothly.
  
