@@ -3,7 +3,7 @@ title: "Project 3 - Example Main Script"
 author: "Group 12: Vikas Arun, Xuanyu Xiao, Boxuan Zhao, Boya Zhao, Yuxi Zhou"
 date: "February 24, 2016"
 output:
-  pdf_document: default
+  pdf_document: defaults
 ---
 Revlevant packages needed for this file
 
@@ -161,7 +161,7 @@ Though the 1000 tree model is slightly better than the 500 tree model when shrin
 
 
 ####Random Forest OOB Results
-![Figure 2: Random Forest OOB error results](../figs/RandomForestOriginalFeatures.jpg)
+![Figure 2: Random Forest OOB error results](../figs/RandomForestErrorOriginalFeatures.jpg)
 
 As expected, the above results show that, as the number of trees increases, the OOB error decreases at a very high rate until it eventually flat lines.
 
