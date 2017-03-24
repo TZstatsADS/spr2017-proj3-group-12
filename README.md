@@ -29,9 +29,9 @@ Term: Spring 2017
  
  + Boxuan Zhao (UNI:bz2290): Developed both SVM linear and non linear models, tune the model parameters to find the best parameters for both orginal sift feature as well as enhanced sift feature and gray feature. Developed enhanced sift features, explored adaboost with decision stump to extract features and particpate in various function modifications to help the project run smoothly.
  
- + Boya Zhao (UNI:bz2294):
++ Boya Zhao (UNI:bz2294): Used RGB methods to construct feature: grayscale. Constructed monochrome images, then used contour methods to construct feature: location.
  
- + Yuxi Zhou (UNI:yz3048): Try the RGB & HSV methods in feature detection.
+ + Yuxi Zhou (UNI:yz3048): Tried the RGB & HSV methods in feature detection.
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
