@@ -1,6 +1,6 @@
 ---
 title: "Project 3 - Example Main Script"
-author: "Yuting Ma, Tian Zheng"
+author: "Group 12: Vikas Arun, Xuanyu Xiao, Boxuan Zhao, Boya Zhao, Yuxi Zhou"
 date: "February 24, 2016"
 output:
   pdf_document: default
@@ -28,7 +28,7 @@ library("EBImage")
 ### Step 1: specify directories.
 This directory should be set to the lib folder of the cloned repository
 ```{r "setup"}
-knitr::opts_knit$set(root.dir = "C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
+knitr::opts_knit$set(root.dir = "../lib")
 # here replace it with your own path or manually set it in RStudio to where this rmd file is located. 
 ```
 
@@ -186,8 +186,8 @@ if(run.test){
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
-  cat("GBM error for original features is ", gbm_error, "/n")
-  cat("Random Forest error for original features is, ", rf_error, "/n")
+  cat("GBM error for original features is ", gbm_error, "\n")
+  cat("Random Forest error for original features is ", rf_error, "\n")
   
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
@@ -209,8 +209,8 @@ if(run.test){
   test_labels = unlist(read.csv(labels_test))
   rf_error = sum(rf_predict != test_labels)/length(test_labels)
   gbm_error = sum(gbm_predict != test_labels)/length(test_labels)
-  cat("GBM error for modified features is ", gbm_error, "/n")
-  cat("Random Forest error for modified features is, ", rf_error, "/n")
+  cat("GBM error for modified features is ", gbm_error, "\n")
+  cat("Random Forest error for modified features is, ", rf_error, "\n")
   
   #load(file=paste0("../output/feature_", "zip", "_", "test", ".RData"))
   #load(file="../output/fit_train.RData")
