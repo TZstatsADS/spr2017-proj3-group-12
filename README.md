@@ -13,13 +13,13 @@ Term: Spring 2017
 	+ team member 4  Boya Zhao (UNI:bz2294)
 	+ team member 5  Yuxi Zhou (UNI:yz3048)
 
-+ Project summary: In this project, we tried to porpose a feasible improvement on the current classification engine for classifying grarscale images of poddle dogs versus images of fried chichen in terms of prediction accuracy as well as running cost, including memory, storage and time. The baseline model uses XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX on SIFT features. Our advanced model uses XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX on combination of XXXXXXXXXXXX features, which enhances the accuracy rate by XXXXXXX%.
++ Project summary: In this project, we tried to porpose a feasible improvement on the current classification engine for classifying grarscale images of poddle dogs versus images of fried chichen in terms of prediction accuracy as well as running cost, including memory, storage and time. The baseline model uses GBM with 500 trees and 0.1 shrinkage on SIFT features. Our advanced model uses random forest with 500 trees on combination of grayscale and SIFT features, which enhances the accuracy rate by ~20%.
 
-+ Baseline model:
++ Baseline model: GBM model with 500 trees and 0.1 shrinkage on all SIFT features. Test Error 23.8%, training time 282 seconds, storage space 19MB.
 
-+ Improved model:
++ Improved model: RF model with 500 trees on a few SIFT features + grayscale features. Test Error: 0.06%, training time 75.87 seconds, storage space .17MB.
 
-+ Final result:
++ Final result: ![image](figs/ErrorRates.JPG)
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
 
