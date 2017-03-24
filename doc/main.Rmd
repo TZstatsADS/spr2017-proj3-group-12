@@ -4,7 +4,6 @@ author: "Yuting Ma, Tian Zheng"
 date: "February 24, 2016"
 output:
   pdf_document: default
-  html_document: default
 ---
 Revlevant packages needed for this file
 
@@ -90,7 +89,7 @@ Features are created by doing two things.
 
 The data is also split into training and testing data in a 75/25 split. 
 
-```{r feature, message = FALSE warnings = FALSE}
+```{r "feature", message = FALSE, warnings = FALSE}
 source("../lib/feature.R")
 source("../lib/DataSplit.R")
 
@@ -200,7 +199,7 @@ if(run.test){
 
 #For test feature
 Predictions are made by the GBM model and Random Forest model on the modified data set, which contains the small subset of SIFT features and additional grayscale features. These predictions are on the test set, which contain 25% of the original data (i.e. 500 points).
-```{r test}
+```{r test_new_feature}
 tm_test=NA
 if(run.test){
   load(gbm_model_modified_features)

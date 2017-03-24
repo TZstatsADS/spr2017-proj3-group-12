@@ -85,8 +85,7 @@ feature <- function(img_dir="../data/test_data/raw_images") {
   
   feature_time = (proc.time() - t)[3]
   cat("Elapsed training time for featurizer is ", feature_time, " seconds \n")
-  
-  return(sift.simp.gray)
+
 }
 
 
