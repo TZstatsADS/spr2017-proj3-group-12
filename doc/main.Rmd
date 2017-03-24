@@ -3,7 +3,7 @@ title: "Project 3 - Example Main Script"
 author: "Group 12: Vikas Arun, Xuanyu Xiao, Boxuan Zhao, Boya Zhao, Yuxi Zhou"
 date: "February 24, 2016"
 output:
-  pdf_document: defaults
+  pdf_document: default
 ---
 Revlevant packages needed for this file
 
@@ -88,7 +88,7 @@ Features are created by doing two things.
 
 The data is also split into training and testing data in a 75/25 split. 
 
-```{r "feature", message = FALSE, warnings = FALSE}
+```{r "feature", warnings = FALSE}
 source("../lib/feature.R")
 source("../lib/DataSplit.R")
 
