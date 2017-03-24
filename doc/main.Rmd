@@ -25,8 +25,7 @@ library("randomForest")
 library("EBImage")
 ```
 
-### Step 0: specify directories.
-
+### Step 1: specify directories.
 This directory should be set to the lib folder of the cloned repository
 ```{r "setup"}
 knitr::opts_knit$set(root.dir = "C:/Users/Vikas/OneDrive/Cloud Workspace/Documents/Columbia/Senior/Applied Data Science/Project 3/spr2017-proj3-group-12/lib")
@@ -58,7 +57,7 @@ gbm_model_modified_predict = "../output/GBMModifiedPredictions.csv"
 rf_model_modified_predict = "../output/RFModifiedPredictions.csv"
 ```
 
-### Step 1: set up controls for evaluation experiments.
+### Step 2: set up controls for evaluation experiments.
 
 In this chunk, ,we have a set of controls for the evaluation experiments. 
 
@@ -81,7 +80,7 @@ run.test=TRUE # run evaluation on an independent test set
 Using cross-validation or independent test set evaluation, we compare the performance of different classifiers or classifiers with different specifications. For the GBM model, shrinkage values of .001, .01, and .1 are evaluted, as well as a size limit of 100, 500, and 1000 trees. For the Random Forest model, a size limit of 100, 500, and 1000 trees is evaluted using the Out of Bag (OOB) error estimate, which is similar to cross validation.
 
 
-### Step 2: construct visual feature for Full images
+### Step 3: construct visual feature for Full images
 
 Features are created by doing two things. 
 *First, the number of provided sift features is reduced. Sift feature with standard deviation in the lowest 25th percentile are thrown out. Additionaly for each feature, the mean value for "chicken" images is subtracted from the mean value for "poodle" images. Features, with the absolute value of differences  less than the median are discarded.
