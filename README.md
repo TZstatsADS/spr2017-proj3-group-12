@@ -1,4 +1,4 @@
-# Project: Labradoodle or Fried Chicken? In Blakc and White. 
+ # Project: Labradoodle or Fried Chicken? In Blakc and White. 
 ![image](figs/poodleKFC.jpg)
 
 ### [Full Project Description](doc/project3_desc.html)
@@ -23,7 +23,7 @@ Term: Spring 2017
 	
 **Contribution statement**: ([default](doc/a_note_on_contributions.md)) All team members approve our work presented in this GitHub repository including this contributions statement. 
 
- + Vikas Arun (UNI:va2298):
+ + Vikas Arun (UNI:va2298): Developed GBM model and Random Forest models, including cross validation and OOB to find optimal parameters for sift features and enhanced sift and gray features. Explored pixel features on resized images. Wrote dataSplit.R to ensure proper separation of training and test set. Wrote train.R, test.R, and main.Rmd. Created powerpoint presentation for class. 
  
  + Xuanyu Xiao (UNI:xx2243):Using PCA to select features according to AUC score; Develop k-NN and ANN models in R and k-NN model in python; Testing both original dataset and improved dataset using k-NN and ANN;
  
